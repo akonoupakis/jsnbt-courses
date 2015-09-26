@@ -1,0 +1,40 @@
+﻿{
+  "name": "jsnbt-courses",
+  "version": "1.0.0",
+  "description": "A courses addon for the jsnbt cms",
+  "keywords": [
+    "jsnbt",
+    "jsonbot"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/akonoupakis/jsnbt-courses"
+  },
+  "bugs": {
+    "url": "https://bitbucket.org/akonoupakis/jsnbt-courses/issues",
+    "email": "konoupakis@gmail.com"
+  },
+  "author": {
+    "name": "Apostolis Konoupakis",
+    "email": "konoupakis@gmail.com",
+    "url": ""
+  },
+  "config": {},
+  "main": "src/app/index.js",
+  "files": [
+    "src/app/**",
+    "src/cfg/**",
+    "src/web/admin/**",
+    "scripts/**"
+  ],
+  "scripts": {
+    "install": "node scripts/install.js",
+    "postuninstall": "node scripts/uninstall.js"
+  },
+  "dependencies": {
+    "underscore": "1.6.0"
+  },
+  "devDependencies": {
+
+  }
+}

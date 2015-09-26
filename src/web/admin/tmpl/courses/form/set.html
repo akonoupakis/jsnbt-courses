@@ -1,0 +1,6 @@
+﻿<div class="row" id="page-content-body" data-scrollspy="body">
+    <ctrl-html class="col-md-12" ng-model="node.content.localized[language].body" ng-height="200" ng-max-height="400" ng-validating="node.active[language]" ng-required="true" ng-label="body"></ctrl-html>
+</div>
+<div class="row" id="page-content-courses" data-scrollspy="courses">
+    <ctrl-node-list class="col-md-12" language="defaults.language" ng-model="node.content.courses" ng-domain="'courses'" ng-options="{ entities: ['course'], parentId: id }" ng-label="courses"></ctrl-node-list>
+</div>    

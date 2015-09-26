@@ -1,0 +1,24 @@
+﻿<div class="row title-container">
+    <div class="col-md-12">
+        <span ng-click="back()" class="glyphicon glyphicon-arrow-left back-button"></span>
+        <h1 class="title">settings</h1>
+        <div class="buttons">
+            <button type="button" ng-show="!published && !draft" class="btn btn-danger" ng-click="discard()">discard</button>
+            <button type="button" ng-disabled="published && !draft" class="btn btn-success" ng-click="publish()">save</button>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<div class="row" id="setting-image-teaser" data-scrollspy="teaser image">
+    <ctrl-numeric class="col-md-6" ng-model="settings.courseImageTeaserHeight" ng-label="teaser image height"></ctrl-numeric>
+    <ctrl-numeric class="col-md-6" ng-model="settings.courseImageTeaserWidth" ng-label="teaser image width"></ctrl-numeric>
+</div>
+
+<div class="row" id="setting-image-body" data-scrollspy="body image">
+    <ctrl-numeric class="col-md-6" ng-model="settings.courseImageBodyHeight" ng-label="body image height"></ctrl-numeric>
+    <ctrl-numeric class="col-md-6" ng-model="settings.courseImageBodyWidth" ng-label="body image width"></ctrl-numeric>
+</div>
+
+<hr />
