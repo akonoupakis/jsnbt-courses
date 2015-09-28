@@ -1,63 +1,49 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesLevelsController = function ($scope, $route, $rootScope, $routeParams, $location, $data, $q, $jsnbt, ModalService, PagedDataService, CoursesCourseService, CoursesLevelService) {
+    var CoursesLevelsController = function ($scope, $route, $rootScope, $routeParams, $location, $data, $q, $jsnbt, $logger, ModalService, PagedDataService, CoursesCourseService, CoursesLevelService) {
         jsnbt.ListControllerBase.apply(this, $scope.getBaseArguments($scope));
         
+        var logger = $logger.create('CoursesLevelsController');
+
         $scope.id = $routeParams.id;
         $scope.parent = undefined;
-        $scope.prefix = $route.current.$$route.location ? $route.current.$$route.location.prefix : undefined;
+
         $scope.offset = _.str.trim($scope.prefix || '', '/').split('/').length;
-
-        $scope.title = '';
-
-        $scope.load = function () {
-            var loadParent = function () {
-                var deferred = $q.defer();
-
-                $data.nodes.get($scope.id).then(function (response) {
-                    $scope.parent = response;
-                    deferred.resolve(response);
-                }, function (error) {
-                    deferred.reject(error);
-                });
-
-                return deferred.promise;
-            };
-
-            var loadData = function () {
-                var deferred = $q.defer();
-
-                PagedDataService.get(jsnbt.db.nodes.get, {
-                    parent: $scope.id,
-                    entity: 'courseLevel'
-                }).then(function (response) {
-                    deferred.resolve(response);
-                }, function (error) {
-                    deferred.reject(error);
-                });
-
-                return deferred.promise;
-            };
-
-            var d = $q.defer();
-
-            $q.all([loadParent(), loadData()]).then(function (results) {
-                var parentResult = results[0];
-                var dataResults = results[1];
-                d.resolve(dataResults);
-            }, function (ex) {
-                d.reject(ex);
-            });
-
-            return d.promise;
-        };
-
-        var setLocationFn = $scope.setLocation;
-        $scope.setLocation = function () {
+        
+        $scope.enqueue('loading', function () {
             var deferred = $q.defer();
 
-            setLocationFn.apply(this, arguments).then(function (response) {
+            $data.nodes.get($scope.id).then(function (response) {
+                $scope.parent = response;
+                deferred.resolve(response);
+            }, function (error) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
+        });
+
+        $scope.load = function () {
+            var deferred = $q.defer();
+
+            PagedDataService.get(jsnbt.db.nodes.get, {
+                parent: $scope.id,
+                entity: 'courseLevel'
+            }).then(function (response) {
+                deferred.resolve(response);
+            }, function (error) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
+        };
+
+        var getBreadcrumbFn = $scope.getBreadcrumb;
+        $scope.getBreadcrumb = function () {
+            var deferred = $q.defer();
+
+            getBreadcrumbFn.apply(this, arguments).then(function (response) {
                 $scope.getNodeBreadcrumb($scope.parent, $scope.prefix).then(function (bc) {
 
                     var offset = $scope.offset;
@@ -97,7 +83,6 @@
                 return;
 
             $scope.title = $scope.parent.title[$scope.defaults.language];
-            $scope.setLocation();
         });
 
         $scope.canCreate = function () {
@@ -132,36 +117,40 @@
             });
         }
 
-        $scope.gridFn.canEdit = function (node) {
-            return true;
+        $scope.gridFn = {
+            canEdit: function (node) {
+                return true;
+            },
+
+            edit: function (node) {
+                var url = $jsnbt.entities[node.entity].getEditUrl(node, $scope.prefix);
+                $location.next(url);
+            },
+
+            canDelete: function (node) {
+                return true;
+            },
+
+            delete: function (node) {
+
+                CoursesCourseService.delete(node).then(function (deleted) {
+                    if (deleted) {
+                        $scope.remove(node);
+                    }
+                }).catch(function (ex) {
+                    throw ex;
+                });
+
+            }
         };
 
-        $scope.gridFn.edit = function (node) {
-            var url = $jsnbt.entities[node.entity].getEditUrl(node, $scope.prefix);
-            $location.next(url);
-        };
-
-        $scope.gridFn.canDelete = function (node) {
-            return true;
-        };
-
-        $scope.gridFn.delete = function (node) {
-
-            CoursesCourseService.delete(node).then(function (deleted) {
-                if (deleted) {
-                    $scope.remove(node);
-                }
-            }).catch(function (ex) {
-                throw ex;
-            });
-
-        };
-
-        $scope.init();
+        $scope.init().catch(function (ex) {
+            logger.error(ex);
+        });
 
     };
     CoursesLevelsController.prototype = Object.create(jsnbt.ListControllerBase.prototype);
 
     angular.module("jsnbt-courses")
-        .controller('CoursesLevelsController', ['$scope', '$route', '$rootScope', '$routeParams', '$location', '$data', '$q', '$jsnbt', 'ModalService', 'PagedDataService', 'CoursesCourseService', 'CoursesLevelService', CoursesLevelsController]);
+        .controller('CoursesLevelsController', ['$scope', '$route', '$rootScope', '$routeParams', '$location', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'PagedDataService', 'CoursesCourseService', 'CoursesLevelService', CoursesLevelsController]);
 })();

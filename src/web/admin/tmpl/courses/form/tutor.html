@@ -1,10 +1,10 @@
 ﻿<div class="row" id="page-content-name" data-scrollspy="name">
-    <ctrl-text class="col-md-6" ng-model="node.content.localized[language].firstName" ng-required="true" ng-label="first name"></ctrl-text>
-    <ctrl-text class="col-md-6" ng-model="node.content.localized[language].lastName" ng-required="true" ng-label="last name"></ctrl-text>
+    <ctrl-text class="col-md-6" ng-model="item.content.localized[language].firstName" ng-validating="active[language]" ng-required="true" ng-label="first name"></ctrl-text>
+    <ctrl-text class="col-md-6" ng-model="item.content.localized[language].lastName" ng-validating="active[language]" ng-required="true" ng-label="last name"></ctrl-text>
 </div>
 <div class="row" id="page-content-image" data-scrollspy="image">
-    <ctrl-image class="col-md-12" ng-model="node.content.image" ng-height="imageSize.height" ng-width="imageSize.width" ng-tip="{{imageTip}}" ng-label="image"></ctrl-image>
+    <ctrl-image class="col-md-12" ng-model="item.content.image" ng-height="imageSize.height" ng-width="imageSize.width" ng-tip="{{imageTip}}" ng-label="image"></ctrl-image>
 </div>
 <div class="row" id="page-content-body" data-scrollspy="body">
-    <ctrl-html class="col-md-12" ng-model="item.content.localized[language].body" ng-height="200" ng-max-height="400" ng-required="true" ng-label="body"></ctrl-html>
+    <ctrl-html class="col-md-12" ng-model="item.content.localized[language].body" ng-height="200" ng-max-height="400" ng-validating="active[language]" ng-required="true" ng-label="body"></ctrl-html>
 </div>

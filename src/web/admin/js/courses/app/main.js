@@ -98,255 +98,198 @@
     .config(['$routeProvider',
         function ($routeProvider) {
 
-            var router = angular.getRouter($routeProvider);
+            var TEMPLATE_BASE = jsnbt.TEMPLATE_BASE;
 
-            var getIndexOptions = function (definition) {
-
-                var obj = {};
-                $.extend(true, obj, {
-                    domain: 'courses',
-                    section: 'courses',
-                    controller: 'CoursesIndexController',
-                    templateUrl: 'tmpl/courses/index.html',
-                    location: {
+            var router = new jsnbt.router('courses', $routeProvider);
+            
+            var routes = {
+                index: function (x) {
+                    x.section('courses');
+                    x.baseTemplate(TEMPLATE_BASE.base);
+                    x.template('tmpl/courses/index.html');
+                    x.controller('CoursesIndexController');
+                },
+                sets: function (x) {
+                    x.section('courses');
+                    x.baseTemplate(TEMPLATE_BASE.list);
+                    x.template('tmpl/courses/sets.html');
+                    x.scope({
                         prefix: '/modules/courses'
+                    });
+                    x.controller('CoursesSetsController');
+                },
+                courses: function (x) {
+                    x.section('courses');
+                    x.baseTemplate(TEMPLATE_BASE.list);
+                    x.template('tmpl/courses/courses.html');
+                    x.scope({
+                        prefix: '/modules/courses'
+                    });
+                    x.controller('CoursesCoursesController');
+                },
+                levels: function (x) {
+                    x.section('courses');
+                    x.baseTemplate(TEMPLATE_BASE.list);
+                    x.template('tmpl/courses/levels.html');
+                    x.scope({
+                        prefix: '/modules/courses'
+                    });
+                    x.controller('CoursesLevelsController');
+                },
+                tutors: function (x) {
+                    x.section('courses');
+                    x.baseTemplate(TEMPLATE_BASE.list);
+                    x.template('tmpl/courses/tutors.html');
+                    x.scope({
+                        prefix: '/modules/courses',
+                        listId: 'tutors'
+                    });
+                    x.controller('CoursesTutorsController');
+                },
+                set: function (x) {
+                    x.section('courses');
+                    x.baseTemplate(TEMPLATE_BASE.nodeForm);
+                    x.template('tmpl/courses/form/set.html');
+                    x.scope({
+                        entity: 'courseSet',
+                        prefix: '/modules/courses'
+                    });
+                    x.controller('CoursesSetController');
+                },
+                course: function (x) {
+                    x.section('courses');
+                    x.baseTemplate(TEMPLATE_BASE.nodeForm);
+                    x.template('tmpl/courses/form/course.html');
+                    x.scope({
+                        entity: 'course',
+                        prefix: '/modules/courses'
+                    });
+                    x.controller('CoursesCourseController');
+                },
+                level: function (x) {
+                    x.section('courses');
+                    x.baseTemplate(TEMPLATE_BASE.nodeForm);
+                    x.template('tmpl/courses/form/level.html');
+                    x.scope({
+                        entity: 'courseLevel',
+                        prefix: '/modules/courses'
+                    });
+                    x.controller('CoursesLevelController');
+                },
+                tutor: function (x) {
+                    x.section('courses');
+                    x.baseTemplate(TEMPLATE_BASE.dataForm);
+                    x.template('tmpl/courses/form/tutor.html');
+                    x.scope({
+                        listId: 'tutors',
+                        prefix: '/modules/courses'
+                    });
+                    x.controller('CoursesTutorController');
+                },
+                settings: {
+                    courses: function (x) {
+                        x.section('courses');
+                        x.baseTemplate(TEMPLATE_BASE.settings);
+                        x.template('tmpl/courses/coursesSettings.html');
+                        x.controller('CoursesCoursesSettingsController');
+                    },
+                    tutors: function (x) {
+                        x.section('courses');
+                        x.baseTemplate(TEMPLATE_BASE.settings);
+                        x.template('tmpl/courses/tutorsSettings.html');
+                        x.controller('CoursesTutorsSettingsController');
                     }
-                }, definition);
-
-                return obj;
+                }
             };
 
-            var getSetsOptions = function (definition) {
+            
+            router.when('/modules/courses', routes.index);
 
-                var obj = {};
-                $.extend(true, obj, {
-                    controller: 'CoursesSetsController',
-                    baseTemplateUrl: 'tmpl/core/base/list.html',
-                    templateUrl: 'tmpl/courses/sets.html',
-                    section: 'courses',
-                    domain: 'courses',
-                    location: {
-                        prefix: '/modules/courses'
-                    }
-                }, definition);
+            router.when('/modules/courses/sets/settings', routes.settings.courses);
+            
+            router.when('/modules/courses/sets', routes.sets);
+            router.when('/content/courses', function (x) {
+                routes.sets(x);
+                x.scope({
+                    prefix: '/content/courses'
+                });
+            });
+               
+            router.when('/modules/courses/courses/:id', routes.courses);
+            router.when('/content/courses/courses/:id', function (x) {
+                routes.courses(x);
+                x.scope({
+                    prefix: '/content/courses'
+                });
+            });
+            router.when('/content/nodes/courses/courses/:id', function (x) {
+                routes.courses(x);
+                x.scope({
+                    prefix: '/content/nodes/courses'
+                });
+            });
+            
+            router.when('/modules/courses/levels/:id', routes.levels);
+            router.when('/content/courses/levels/:id', function (x) {
+                routes.levels(x);
+                x.scope({
+                    prefix: '/content/courses'
+                });
+            });
+            router.when('/content/nodes/courses/levels/:id', function (x) {
+                routes.levels(x);
+                x.scope({
+                    prefix: '/content/nodes/courses'
+                });
+            });
 
-                return obj;
-            };
+            router.when('/modules/courses/tutors/settings', routes.settings.tutors);
 
-            var getCoursesOptions = function (definition) {
+            router.when('/modules/courses/tutors', routes.tutors);
+            
+            
+            router.when('/modules/courses/set/:id', routes.set);
+            router.when('/content/courses/set/:id', function (x) {
+                routes.set(x);
+                x.scope({
+                    prefix: '/content/courses'
+                });
+            });
+            router.when('/content/nodes/courses/set/:id', function (x) {
+                routes.set(x);
+                x.scope({
+                    prefix: '/content/nodes/courses'
+                });
+            });
 
-                var obj = {};
-                $.extend(true, obj, {
-                    controller: 'CoursesCoursesController',
-                    baseTemplateUrl: 'tmpl/core/base/list.html',
-                    templateUrl: 'tmpl/courses/courses.html',
-                    section: 'courses',
-                    domain: 'courses',
-                    location: {
-                        prefix: '/modules/courses'
-                    }
-                }, definition);
+            router.when('/modules/courses/course/:id', routes.course);
+            router.when('/content/courses/course/:id', function (x) {
+                routes.course(x);
+                x.scope({
+                    prefix: '/content/courses'
+                });
+            });
+            router.when('/content/nodes/courses/course/:id', function (x) {
+                routes.course(x);
+                x.scope({
+                    prefix: '/content/nodes/courses'
+                });
+            });
 
-                return obj;
-            };
+            router.when('/modules/courses/level/:id', routes.level);
+            router.when('/content/courses/level/:id', function (x) {
+                routes.level(x);
+                x.scope({
+                    prefix: '/content/courses'
+                });
+            });
+            router.when('/content/nodes/courses/level/:id', function (x) {
+                routes.level(x);
+                x.scope({
+                    prefix: '/content/nodes/courses'
+                });
+            });
 
-            var getLevelsOptions = function (definition) {
-
-                var obj = {};
-                $.extend(true, obj, {
-                    controller: 'CoursesLevelsController',
-                    baseTemplateUrl: 'tmpl/core/base/list.html',
-                    templateUrl: 'tmpl/courses/levels.html',
-                    section: 'courses',
-                    domain: 'courses',
-                    location: {
-                        prefix: '/modules/courses'
-                    }
-                }, definition);
-
-                return obj;
-            };
-
-            var getTutorsOptions = function (definition) {
-                
-                var obj = {};
-                $.extend(true, obj, {
-                    controller: 'CoursesTutorsController',
-                    baseTemplateUrl: 'tmpl/core/base/list.html',
-                    templateUrl: 'tmpl/courses/tutors.html',
-                    section: 'courses',
-                    domain: 'courses',
-                    list: 'tutors',
-                    location: {
-                        prefix: '/modules/courses'
-                    }
-                }, definition);
-
-                return obj;
-            };
-
-
-            var getSetOptions = function (definition) {
-
-                var obj = {};
-                $.extend(true, obj, {
-                    controller: 'CoursesSetController',
-                    baseTemplateUrl: 'tmpl/core/base/node.html',
-                    templateUrl: 'tmpl/courses/form/set.html',
-                    section: 'courses',
-                    domain: 'courses',
-                    entity: 'courseSet',
-                    location: {
-                        prefix: '/modules/courses'
-                    }
-                }, definition);
-
-                return obj;
-            };
-
-            var getCourseOptions = function (definition) {
-
-                var obj = {};
-                $.extend(true, obj, {
-                    controller: 'CoursesCourseController',
-                    baseTemplateUrl: 'tmpl/core/base/node.html',
-                    templateUrl: 'tmpl/courses/form/course.html',
-                    section: 'courses',
-                    domain: 'courses',
-                    entity: 'course',
-                    location: {
-                        prefix: '/modules/courses'
-                    }
-                }, definition);
-
-                return obj;
-            };
-
-            var getLevelOptions = function (definition) {
-
-                var obj = {};
-                $.extend(true, obj, {
-                    controller: 'CoursesLevelController',
-                    baseTemplateUrl: 'tmpl/core/base/node.html',
-                    templateUrl: 'tmpl/courses/form/level.html',
-                    section: 'courses',
-                    domain: 'courses',
-                    entity: 'courseLevel',
-                    location: {
-                        prefix: '/modules/courses'
-                    }
-                }, definition);
-
-                return obj;
-            };
-
-            var getTutorOptions = function (definition) {
-
-                var obj = {};
-                $.extend(true, obj, {
-                    controller: 'CoursesTutorController',
-                    baseTemplateUrl: 'tmpl/core/base/dataForm.html',
-                    templateUrl: 'tmpl/courses/form/tutor.html',
-                    section: 'courses',
-                    domain: 'courses',
-                    list: 'tutors',
-                    location: {
-                        prefix: '/modules/courses'
-                    }
-                }, definition);
-
-                return obj;
-            };
-
-            router
-                .when('/modules/courses', getIndexOptions())
-
-                .when('/modules/courses/sets/settings', {
-                    controller: 'CoursesCoursesSettingsController',
-                    baseTemplateUrl: 'tmpl/core/base/settings.html',
-                    templateUrl: 'tmpl/courses/coursesSettings.html',
-                    section: 'courses',
-                    domain: 'courses',
-                })
-                
-                .when('/modules/courses/sets', getSetsOptions())
-                .when('/content/courses', getSetsOptions({
-                    location: {
-                        prefix: '/content/courses'
-                    }
-                }))
-
-                .when('/modules/courses/courses/:id', getCoursesOptions())
-                .when('/content/courses/courses/:id', getCoursesOptions({
-                    location: {
-                        prefix: '/content/courses'
-                    }
-                }))
-                .when('/content/nodes/courses/courses/:id', getCoursesOptions({
-                    location: {
-                        prefix: '/content/nodes/courses'
-                    }
-                }))
-
-                .when('/modules/courses/levels/:id', getLevelsOptions())
-                .when('/content/courses/levels/:id', getLevelsOptions({
-                    location: {
-                        prefix: '/content/courses'
-                    }
-                }))
-                .when('/content/nodes/courses/levels/:id', getLevelsOptions({
-                    location: {
-                        prefix: '/content/nodes/courses'
-                    }
-                }))
-
-                .when('/modules/courses/tutors/settings', {
-                    controller: 'CoursesTutorsSettingsController',
-                    baseTemplateUrl: 'tmpl/core/base/settings.html',
-                    templateUrl: 'tmpl/courses/tutorsSettings.html',
-                    section: 'courses',
-                    domain: 'courses',
-                })
-
-                .when('/modules/courses/tutors', getTutorsOptions())
-
-
-                .when('/modules/courses/set/:id', getSetOptions())
-                .when('/content/courses/set/:id', getSetOptions({
-                    location: {
-                        prefix: '/content/courses'
-                    }
-                }))
-                .when('/content/nodes/courses/set/:id', getSetOptions({
-                     location: {
-                         prefix: '/content/nodes/courses'
-                     }
-                }))
-
-                .when('/modules/courses/course/:id', getCourseOptions())
-                .when('/content/courses/course/:id', getCourseOptions({
-                    location: {
-                        prefix: '/content/courses'
-                    }
-                }))
-                .when('/content/nodes/courses/course/:id', getCourseOptions({
-                    location: {
-                        prefix: '/content/nodes/courses'
-                    }
-                }))
-
-                .when('/modules/courses/level/:id', getLevelOptions())
-                .when('/content/courses/level/:id', getLevelOptions({
-                    location: {
-                        prefix: '/content/courses'
-                    }
-                }))
-                .when('/content/nodes/courses/level/:id', getLevelOptions({
-                    location: {
-                        prefix: '/content/nodes/courses'
-                    }
-                }))
-
-                .when('/modules/courses/tutors/:id', getTutorOptions());
+            router.when('/modules/courses/tutors/:id', routes.tutor);
         }]);
 })();

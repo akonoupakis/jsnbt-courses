@@ -11,7 +11,7 @@
 
         $scope.imageTip = undefined;
 
-        $scope.enqueue('preload', function () {
+        $scope.enqueue('preloading', function () {
             var deferred = $q.defer();
 
             $data.settings.get({

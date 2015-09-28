@@ -1,13 +1,13 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesCoursesController = function ($scope, $route, $rootScope, $routeParams, $location, $data, $q, $jsnbt, ModalService, PagedDataService, CoursesSetService, CoursesCourseService) {
+    var CoursesCoursesController = function ($scope, $route, $rootScope, $routeParams, $location, $data, $q, $jsnbt, $logger, ModalService, PagedDataService, CoursesSetService, CoursesCourseService) {
         jsnbt.ListControllerBase.apply(this, $scope.getBaseArguments($scope));
         
+        var logger = $logger.create('CoursesCoursesController');
+
         $scope.id = $routeParams.id;
         $scope.parent = undefined;
-        $scope.prefix = $route.current.$$route.location ? $route.current.$$route.location.prefix : undefined;
-        $scope.offset = _.str.trim($scope.prefix || '', '/').split('/').length;
 
         $scope.title = '';
 
@@ -53,13 +53,13 @@
             return d.promise;
         };
 
-        var setLocationFn = $scope.setLocation;
-        $scope.setLocation = function () {
+        var getBreadcrumbFn = $scope.getBreadcrumb;
+        $scope.getBreadcrumb = function () {
             var deferred = $q.defer();
 
-            setLocationFn.apply(this, arguments).then(function (response) {
+            getBreadcrumbFn.apply(this, arguments).then(function (response) {
 
-                var offset = $scope.offset;
+                var offset = _.str.trim($scope.prefix || '', '/').split('/').length;;
 
                 if ($scope.prefix === '/content/nodes/courses') {
                     offset--;
@@ -87,12 +87,19 @@
             return deferred.promise;
         };
 
-        $scope.$watch('parent.title', function () {
-            if (!$scope.parent)
-                return;
+        $scope.enqueue('watch', function () {
+            var deferred = $q.defer();
 
-            $scope.title = $scope.parent.title[$scope.defaults.language];
-            $scope.setLocation();
+            $scope.$watch('parent.title', function () {
+                if (!$scope.parent)
+                    return;
+
+                $scope.title = $scope.parent.title[$scope.defaults.language];
+            });
+
+            deferred.resolve();
+
+            return deferred.promise;
         });
 
         $scope.canCreate = function () {
@@ -127,43 +134,47 @@
             });
         }
 
-        $scope.gridFn.canOpen = function (node) {
-            return true;
-        };
+        $scope.gridFn = {
+            canOpen: function (node) {
+                return true;
+            },
 
-        $scope.gridFn.open = function (node) {
-            var url = $jsnbt.entities[node.entity].getViewUrl(node, $scope.prefix);
-            $location.next(url);
-        };
+            open: function (node) {
+                var url = $jsnbt.entities[node.entity].getViewUrl(node, $scope.prefix);
+                $location.next(url);
+            },
 
-        $scope.gridFn.canEdit = function (node) {
-            return true;
-        };
+            canEdit: function (node) {
+                return true;
+            },
 
-        $scope.gridFn.edit = function (node) {
-            var url = $jsnbt.entities[node.entity].getEditUrl(node, $scope.prefix);
-            $location.next(url);
-        };
+            edit: function (node) {
+                var url = $jsnbt.entities[node.entity].getEditUrl(node, $scope.prefix);
+                $location.next(url);
+            },
 
-        $scope.gridFn.canDelete = function (node) {
-            return true;
-        };
+            canDelete: function (node) {
+                return true;
+            },
 
-        $scope.gridFn.delete = function (node) {
-            CoursesCourseService.delete(node).then(function (deleted) {
-                if (deleted) {
-                    $scope.remove(node);
-                }
-            }).catch(function (ex) {
-                throw ex;
-            });
-        };
+            delete: function (node) {
+                CoursesCourseService.delete(node).then(function (deleted) {
+                    if (deleted) {
+                        $scope.remove(node);
+                    }
+                }).catch(function (ex) {
+                    throw ex;
+                });
+            }
+        }
 
-        $scope.init();
+        $scope.init().catch(function (ex) {
+            logger.error(ex);
+        });
 
     };
     CoursesCoursesController.prototype = Object.create(jsnbt.ListControllerBase.prototype);
 
     angular.module("jsnbt-courses")
-        .controller('CoursesCoursesController', ['$scope', '$route', '$rootScope', '$routeParams', '$location', '$data', '$q', '$jsnbt', 'ModalService', 'PagedDataService', 'CoursesSetService', 'CoursesCourseService', CoursesCoursesController]);
+        .controller('CoursesCoursesController', ['$scope', '$route', '$rootScope', '$routeParams', '$location', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'PagedDataService', 'CoursesSetService', 'CoursesCourseService', CoursesCoursesController]);
 })();

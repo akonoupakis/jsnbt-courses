@@ -1,11 +1,11 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesSetsController = function ($scope, $route, $rootScope, $location, $data, $jsnbt, $q, ModalService, PagedDataService, CoursesSetService) {
+    var CoursesSetsController = function ($scope, $route, $rootScope, $location, $data, $jsnbt, $q, $logger, ModalService, PagedDataService, CoursesSetService) {
         jsnbt.ListControllerBase.apply(this, $scope.getBaseArguments($scope));
         
-        $scope.prefix = $route.current.$$route.location ? $route.current.$$route.location.prefix : undefined;
-        
+        var logger = $logger.create('CoursesSetsController');
+
         $scope.load = function () {
             var deferred = $q.defer();
 
@@ -38,44 +38,48 @@
             $location.next(url);
         };
 
-        $scope.gridFn.canOpen = function (node) {
-            return true;
-        };
+        $scope.gridFn = {
+            canOpen: function (node) {
+                return true;
+            },
 
-        $scope.gridFn.open = function (node) {
-            var url = $jsnbt.entities[node.entity].getViewUrl(node, $scope.prefix);
-            $location.next(url);
-        };
+            open: function (node) {
+                var url = $jsnbt.entities[node.entity].getViewUrl(node, $scope.prefix);
+                $location.next(url);
+            },
 
-        $scope.gridFn.canEdit = function (node) {
-            return true;
-        };
+            canEdit: function (node) {
+                return true;
+            },
 
-        $scope.gridFn.edit = function (node) {
-            var url = $jsnbt.entities[node.entity].getEditUrl(node, $scope.prefix);
-            $location.next(url);
-        };
+            edit: function (node) {
+                var url = $jsnbt.entities[node.entity].getEditUrl(node, $scope.prefix);
+                $location.next(url);
+            },
 
-        $scope.gridFn.canDelete = function (node) {
-            return true;
-        };
+            canDelete: function (node) {
+                return true;
+            },
 
-        $scope.gridFn.delete = function (node) {
+            delete: function (node) {
 
-            CoursesSetService.delete(node).then(function (deleted) {
-                if (deleted) {
-                    $scope.remove(node);
-                }
-            }).catch(function (ex) {
-                throw ex;
-            });
-        };
+                CoursesSetService.delete(node).then(function (deleted) {
+                    if (deleted) {
+                        $scope.remove(node);
+                    }
+                }).catch(function (ex) {
+                    throw ex;
+                });
+            }
+        }
 
-        $scope.init();
+        $scope.init().catch(function (ex) {
+            logger.error(ex);
+        });
 
     };
     CoursesSetsController.prototype = Object.create(jsnbt.ListControllerBase.prototype);
 
     angular.module("jsnbt-courses")
-        .controller('CoursesSetsController', ['$scope', '$route', '$rootScope', '$location', '$data', '$jsnbt', '$q', 'ModalService', 'PagedDataService', 'CoursesSetService', CoursesSetsController]);
+        .controller('CoursesSetsController', ['$scope', '$route', '$rootScope', '$location', '$data', '$jsnbt', '$q', '$logger', 'ModalService', 'PagedDataService', 'CoursesSetService', CoursesSetsController]);
 })();

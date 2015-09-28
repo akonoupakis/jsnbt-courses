@@ -3,7 +3,7 @@
         <span ng-click="back()" class="glyphicon glyphicon-arrow-left back-button"></span>
         <h1 class="title">{{ title }}</h1>
         <div class="buttons">
-            <button title="create new" class="btn btn-default glyphicon glyphicon-plus-sign" type="button" value="create" ng-click="create()"></button>
+            <button title="create new" class="btn btn-default glyphicon glyphicon-plus-sign" type="button" value="create" ng-disabled="!canCreate()" ng-click="create()"></button>
             <button title="settings" class="btn btn-default glyphicon glyphicon-cog" type="button" value="create" ng-disabled="!canViewSettings()" ng-click="viewSettings()"></button>
         </div>
     </div>
@@ -25,8 +25,8 @@
                     {{ row.title[language] }}
                 </ctrl-grid-column>
                 <ctrl-grid-buttons-column>
-                    <button class="btn btn-default glyphicon glyphicon-edit btn-sm" ng-click="fn.edit(row)" />
-                    <button class="btn btn-default glyphicon glyphicon-remove btn-sm" ng-click="fn.delete(row)" />
+                    <button class="btn btn-default glyphicon glyphicon-edit btn-sm" ng-disabled="!fn.canEdit(row)" ng-click="fn.edit(row)" />
+                    <button class="btn btn-default glyphicon glyphicon-remove btn-sm" ng-disabled="!fn.canDelete(row)" ng-click="fn.delete(row)" />
                 </ctrl-grid-buttons-column>
             </ctrl-grid-body>
         </ctrl-grid>
