@@ -14,7 +14,14 @@
 
                 $scope.getNodeBreadcrumb($scope.isNew() ? { id: 'new', parent: $scope.parent ? $scope.parent.id : '' } : $scope.node, $scope.prefix).then(function (bc) {
 
-                    breadcrumb.splice($scope.offset);
+                    var offset = $scope.offset;
+                    var remaining = 1;
+                    if ($scope.prefix === '/content/nodes/courses' && $scope.offset === 3) {
+                        offset--;
+                        remaining++;
+                    }
+
+                    breadcrumb.splice(offset);
 
                     _.each(bc, function (c) {
                         breadcrumb.push(c);
@@ -27,11 +34,13 @@
                         });
                     }
 
-                    if (!$scope.isNew()) {
-                        breadcrumb.splice(breadcrumb.length - 1, 0, {
-                            url: $jsnbt.entities['courseSet'].getViewUrl($scope.node, $scope.prefix),
-                            visible: false
-                        });
+                    if($scope.prefix !== '/content/nodes/courses') {
+                        if (!$scope.isNew()) {
+                            breadcrumb.splice(breadcrumb.length - 1, 0, {
+                                url: $jsnbt.entities['courseSet'].getViewUrl($scope.node, $scope.prefix),
+                                visible: false
+                            });
+                        }
                     }
 
                     deferred.resolve(breadcrumb);
