@@ -1,18 +1,18 @@
 ﻿<div id="page-content-images" data-scrollspy="images">
     <div class="row">
-        <ctrl-image class="col-md-6" ng-model="node.content.teaserImage" ng-height="imageSize.teaser.height" ng-width="imageSize.teaser.width" ng-tip="{{imageTip.teaser}}" ng-label="teaser image"></ctrl-image>
-        <ctrl-image class="col-md-6" ng-model="node.content.image" ng-height="imageSize.body.height" ng-width="imageSize.body.width" ng-tip="{{imageTip.body}}" ng-label="body image"></ctrl-image>
+        <ctrl-image class="col-sm-6" ng-model="node.content.teaserImage" ng-height="imageSize.teaser.height" ng-width="imageSize.teaser.width" ng-tip="{{imageTip.teaser}}" ng-label="teaser image"></ctrl-image>
+        <ctrl-image class="col-sm-6" ng-model="node.content.image" ng-height="imageSize.body.height" ng-width="imageSize.body.width" ng-tip="{{imageTip.body}}" ng-label="body image"></ctrl-image>
     </div>
 </div>
 <div class="row" id="page-content-teaser" data-scrollspy="teaser">
-    <ctrl-html class="col-md-12" ng-model="node.content.localized[language].teaser" ng-height="200" ng-validating="node.active[language]" ng-required="true" ng-label="teaser"></ctrl-html>
+    <ctrl-html class="col-sm-12" ng-model="node.content.localized[language].teaser" ng-height="200" ng-validating="node.active[language]" ng-required="true" ng-label="teaser"></ctrl-html>
 </div>
 <div class="row" id="page-content-body" data-scrollspy="body">
-    <ctrl-html class="col-md-12" ng-model="node.content.localized[language].body" ng-height="200" ng-max-height="400" ng-validating="node.active[language]" ng-required="true" ng-label="body"></ctrl-html>
+    <ctrl-html class="col-sm-12" ng-model="node.content.localized[language].body" ng-height="200" ng-max-height="400" ng-validating="node.active[language]" ng-required="true" ng-label="body"></ctrl-html>
 </div>
 <div class="row" id="page-content-levels" data-scrollspy="level">
-    <ctrl-node-list class="col-md-12" language="defaults.language" ng-model="node.content.levels" ng-domain="'courses'" ng-options="{ entities: ['courseLevel'], parentId: id }" ng-label="levels"></ctrl-node-list>
+    <ctrl-node-list class="col-sm-12" language="defaults.language" ng-model="node.content.levels" ng-domain="'courses'" ng-options="{ entities: ['courseLevel'], parentId: id }" ng-label="levels"></ctrl-node-list>
 </div>    
 <div class="row" id="page-content-tutors" data-scrollspy="tutors">
-    <ctrl-data-list language="defaults.language" class="col-md-12" ng-model="node.content.tutors" ng-domain="'courses'" ng-list-id="'tutors'" ng-label="tutors"></ctrl-data-list>
+    <ctrl-data-list class="col-sm-12" language="defaults.language" ng-model="node.content.tutors" ng-domain="'courses'" ng-list-id="'tutors'" ng-label="tutors"></ctrl-data-list>
 </div>
