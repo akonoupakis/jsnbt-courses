@@ -1,8 +1,8 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesIndexController = function ($scope, $jsnbt, $location) {
-        jsnbt.controllers.ControllerBase.apply(this, $scope.getBaseArguments($scope));
+    var CoursesIndexController = function ($scope, $rootScope, $jsnbt, $location) {
+        jsnbt.controllers.ControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         $scope.items = [{
             id: 'sets',
@@ -22,5 +22,5 @@
 
 
     angular.module("jsnbt-courses")
-        .controller('CoursesIndexController', ['$scope', '$jsnbt', '$location', CoursesIndexController]);
+        .controller('CoursesIndexController', ['$scope', '$rootScope', '$jsnbt', '$location', CoursesIndexController]);
 })();

@@ -1,8 +1,8 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesTutorsController = function ($scope, $route, $rootScope, $routeParams, $location, $data, $q, $jsnbt, ModalService, PagedDataService) {
-        jsnbt.controllers.DataListControllerBase.apply(this, $scope.getBaseArguments($scope));
+    var CoursesTutorsController = function ($scope, $rootScope, $route, $routeParams, $location, $data, $q, $jsnbt, ModalService, PagedDataService) {
+        jsnbt.controllers.DataListControllerBase.apply(this, $rootScope.getBaseArguments($scope));
         
         $scope.canViewSettings = function () {
             return true;
@@ -18,5 +18,5 @@
     CoursesTutorsController.prototype = Object.create(jsnbt.controllers.DataListControllerBase.prototype);
 
     angular.module("jsnbt-courses")
-        .controller('CoursesTutorsController', ['$scope', '$route', '$rootScope', '$routeParams', '$location', '$data', '$q', '$jsnbt', 'ModalService', 'PagedDataService', CoursesTutorsController]);
+        .controller('CoursesTutorsController', ['$scope', '$rootScope', '$route', '$routeParams', '$location', '$data', '$q', '$jsnbt', 'ModalService', 'PagedDataService', CoursesTutorsController]);
 })();

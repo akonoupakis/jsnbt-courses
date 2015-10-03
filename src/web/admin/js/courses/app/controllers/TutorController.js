@@ -1,8 +1,8 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesTutorController = function ($scope, $route, $rootScope, $routeParams, $location, $data, $q, $jsnbt, ModalService, PagedDataService) {
-        jsnbt.controllers.DataFormControllerBase.apply(this, $scope.getBaseArguments($scope));
+    var CoursesTutorController = function ($scope, $rootScope, $route, $routeParams, $location, $data, $q, $jsnbt, ModalService, PagedDataService) {
+        jsnbt.controllers.DataFormControllerBase.apply(this, $rootScope.getBaseArguments($scope));
         
         $scope.imageSize = {
             height: undefined,
@@ -40,5 +40,5 @@
     CoursesTutorController.prototype = Object.create(jsnbt.controllers.DataFormControllerBase.prototype);
 
     angular.module("jsnbt-courses")
-        .controller('CoursesTutorController', ['$scope', '$route', '$rootScope', '$routeParams', '$location', '$data', '$q', '$jsnbt', 'ModalService', 'PagedDataService', CoursesTutorController]);
+        .controller('CoursesTutorController', ['$scope', '$rootScope', '$route', '$routeParams', '$location', '$data', '$q', '$jsnbt', 'ModalService', 'PagedDataService', CoursesTutorController]);
 })();
