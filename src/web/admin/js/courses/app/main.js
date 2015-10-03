@@ -100,7 +100,7 @@
 
             var TEMPLATE_BASE = jsnbt.constants.TEMPLATE_BASE;
 
-            var router = new jsnbt.router('courses', $routeProvider);
+            var router = new jsnbt.ViewRouter('courses', $routeProvider);
             
             var routes = {
                 index: function (x) {
