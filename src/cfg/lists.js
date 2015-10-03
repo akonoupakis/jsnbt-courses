@@ -1,5 +1,8 @@
 module.exports = [{
     id: 'tutors',
     name: 'tutors',
-    form: 'tmpl/courses/form/tutor.html'
+    form: 'tmpl/courses/form/tutor.html',
+    properties: {
+        title: false
+    }
 }];

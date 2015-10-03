@@ -1,9 +1,11 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesTutorController = function ($scope, $rootScope, $route, $routeParams, $location, $data, $q, $jsnbt, ModalService, PagedDataService) {
+    var CoursesTutorController = function ($scope, $rootScope, $route, $routeParams, $location, $data, $q, $jsnbt, $logger, ModalService, PagedDataService) {
         jsnbt.controllers.DataFormControllerBase.apply(this, $rootScope.getBaseArguments($scope));
         
+        var logger = $logger.create('CoursesTutorController');
+
         $scope.imageSize = {
             height: undefined,
             width: undefined
@@ -35,10 +37,28 @@
             return deferred.promise;
         });
 
-        $scope.init();
+        $scope.enqueue('set', function () {
+            var deferred = $q.defer();
+
+            if ($scope.item &&
+                $scope.item.content &&
+                $scope.item.content.localized &&
+                $scope.item.content.localized[$scope.defaults.language]) {
+                $scope.setTitle($scope.item.content.localized[$scope.defaults.language].firstName + ' ' + $scope.item.content.localized[$scope.defaults.language].lastName);
+            }
+            
+            deferred.resolve();
+
+            return deferred.promise;
+        });
+
+
+        $scope.init().catch(function (ex) {
+            logger.error(ex);
+        });
     };
     CoursesTutorController.prototype = Object.create(jsnbt.controllers.DataFormControllerBase.prototype);
 
     angular.module("jsnbt-courses")
-        .controller('CoursesTutorController', ['$scope', '$rootScope', '$route', '$routeParams', '$location', '$data', '$q', '$jsnbt', 'ModalService', 'PagedDataService', CoursesTutorController]);
+        .controller('CoursesTutorController', ['$scope', '$rootScope', '$route', '$routeParams', '$location', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'PagedDataService', CoursesTutorController]);
 })();

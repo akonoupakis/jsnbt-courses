@@ -4,14 +4,17 @@ module.exports = [{
     treeNode: true,
     pointed: true,
     properties: {
-        parent: false
+        parent: false,
+        courses: true
     }
 }, {
     name: 'course',
     allowed: ['courseLevel'],
     treeNode: true,
     properties: {
-        parent: false
+        parent: false,
+        levels: true,
+        tutors: true
     }
 }, {
     name: 'courseLevel',
@@ -19,11 +22,12 @@ module.exports = [{
     treeNode: false,
     properties: {
         parent: false,
-        //seo: false,
-        layout: false,
+        layouts: false,
+        seo: false,
         template: false,
         meta: false,
         robots: false,
-        permissions: false
+        permissions: false,
+        tutors: true
     }
 }];

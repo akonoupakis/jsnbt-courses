@@ -10,9 +10,9 @@
 <div class="row" id="page-content-body" data-scrollspy="body">
     <ctrl-html class="col-sm-12" ng-model="node.content.localized[language].body" ng-height="200" ng-max-height="400" ng-validating="node.active[language]" ng-required="true" ng-label="body"></ctrl-html>
 </div>
-<div class="row" id="page-content-levels" data-scrollspy="level">
-    <ctrl-node-list class="col-sm-12" language="defaults.language" ng-model="node.content.levels" ng-domain="'courses'" ng-options="{ entities: ['courseLevel'], parentId: id }" ng-label="levels"></ctrl-node-list>
+<div class="row" id="page-content-levels" data-scrollspy="level" ng-show="entity.properties.levels">
+    <ctrl-node-list class="col-sm-12" language="defaults.language" ng-model="node.content.levels" ng-domain="'courses'" ng-disabled="!entity.properties.levels" ng-options="{ entities: ['courseLevel'], parentId: id }" ng-label="levels"></ctrl-node-list>
 </div>    
-<div class="row" id="page-content-tutors" data-scrollspy="tutors">
-    <ctrl-data-list class="col-sm-12" language="defaults.language" ng-model="node.content.tutors" ng-domain="'courses'" ng-list-id="'tutors'" ng-label="tutors"></ctrl-data-list>
+<div class="row" id="page-content-tutors" data-scrollspy="tutors" ng-show="entity.properties.tutors">
+    <ctrl-data-list class="col-sm-12" language="defaults.language" ng-model="node.content.tutors" ng-domain="'courses'" ng-list-id="'tutors'" ng-disabled="!entity.properties.tutors" ng-label="tutors"></ctrl-data-list>
 </div>
