@@ -2,7 +2,7 @@
     "use strict";
 
     var CoursesLevelController = function ($scope, $route, $rootScope, $location, $q, $data, $logger) {
-        jsnbt.NodeFormControllerBase.apply(this, $scope.getBaseArguments($scope));
+        jsnbt.controllers.NodeFormControllerBase.apply(this, $scope.getBaseArguments($scope));
 
         var logger = $logger.create('CoursesLevelController');
 
@@ -64,7 +64,7 @@
             logger.error(ex);
         });
     };
-    CoursesLevelController.prototype = Object.create(jsnbt.NodeFormControllerBase.prototype);
+    CoursesLevelController.prototype = Object.create(jsnbt.controllers.NodeFormControllerBase.prototype);
 
     angular.module("jsnbt-courses")
         .controller('CoursesLevelController', ['$scope', '$route', '$rootScope', '$location', '$q', '$data', '$logger', CoursesLevelController]);

@@ -2,7 +2,7 @@
     "use strict";
 
     var CoursesSetController = function ($scope, $route, $rootScope, $location, $q, $data, $jsnbt, $logger) {
-        jsnbt.NodeFormControllerBase.apply(this, $scope.getBaseArguments($scope));
+        jsnbt.controllers.NodeFormControllerBase.apply(this, $scope.getBaseArguments($scope));
 
         var logger = $logger.create('CoursesSetController');
 
@@ -60,7 +60,7 @@
             logger.error(ex);
         });
     };
-    CoursesSetController.prototype = Object.create(jsnbt.NodeFormControllerBase.prototype);
+    CoursesSetController.prototype = Object.create(jsnbt.controllers.NodeFormControllerBase.prototype);
 
     angular.module("jsnbt-courses")
         .controller('CoursesSetController', ['$scope', '$route', '$rootScope', '$location', '$q', '$data', '$jsnbt', '$logger', CoursesSetController]);

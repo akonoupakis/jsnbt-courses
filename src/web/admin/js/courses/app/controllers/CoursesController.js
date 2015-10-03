@@ -2,7 +2,7 @@
     "use strict";
     
     var CoursesCoursesController = function ($scope, $route, $rootScope, $routeParams, $location, $data, $q, $jsnbt, $logger, ModalService, PagedDataService, CoursesSetService, CoursesCourseService) {
-        jsnbt.ListControllerBase.apply(this, $scope.getBaseArguments($scope));
+        jsnbt.controllers.ListControllerBase.apply(this, $scope.getBaseArguments($scope));
         
         var logger = $logger.create('CoursesCoursesController');
 
@@ -173,7 +173,7 @@
         });
 
     };
-    CoursesCoursesController.prototype = Object.create(jsnbt.ListControllerBase.prototype);
+    CoursesCoursesController.prototype = Object.create(jsnbt.controllers.ListControllerBase.prototype);
 
     angular.module("jsnbt-courses")
         .controller('CoursesCoursesController', ['$scope', '$route', '$rootScope', '$routeParams', '$location', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'PagedDataService', 'CoursesSetService', 'CoursesCourseService', CoursesCoursesController]);

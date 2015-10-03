@@ -2,7 +2,7 @@
     "use strict";
     
     var CoursesIndexController = function ($scope, $jsnbt, $location) {
-        jsnbt.ControllerBase.apply(this, $scope.getBaseArguments($scope));
+        jsnbt.controllers.ControllerBase.apply(this, $scope.getBaseArguments($scope));
 
         $scope.items = [{
             id: 'sets',
@@ -18,7 +18,7 @@
             image: 'img/courses/tutors.png'
         }];
     };
-    CoursesIndexController.prototype = Object.create(jsnbt.ControllerBase.prototype);
+    CoursesIndexController.prototype = Object.create(jsnbt.controllers.ControllerBase.prototype);
 
 
     angular.module("jsnbt-courses")
