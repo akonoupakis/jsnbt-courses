@@ -3,24 +3,11 @@
     
     var CoursesSetsController = function ($scope, $rootScope, $route, $location, $data, $jsnbt, $q, $logger, ModalService, PagedDataService, CoursesSetService) {
         jsnbt.controllers.ListControllerBase.apply(this, $rootScope.getBaseArguments($scope));
+
+        var self = this;
         
         var logger = $logger.create('CoursesSetsController');
-
-        $scope.load = function () {
-            var deferred = $q.defer();
-
-            PagedDataService.get(jsnbt.db.nodes.get, {
-                parent: '',
-                entity: 'courseSet'
-            }).then(function (response) {
-                deferred.resolve(response);
-            }, function (error) {
-                deferred.reject(error);
-            });
-
-            return deferred.promise;
-        };
-
+        
         $scope.canViewSettings = function () {
             return true;
         };
@@ -65,7 +52,7 @@
 
                 CoursesSetService.delete(node).then(function (deleted) {
                     if (deleted) {
-                        $scope.remove(node);
+                        self.remove(node);
                     }
                 }).catch(function (ex) {
                     throw ex;
@@ -73,12 +60,27 @@
             }
         }
 
-        $scope.init().catch(function (ex) {
+        this.init().catch(function (ex) {
             logger.error(ex);
         });
 
     };
     CoursesSetsController.prototype = Object.create(jsnbt.controllers.ListControllerBase.prototype);
+
+    CoursesSetsController.prototype.load = function () {
+        var deferred = this.ctor.$q.defer();
+
+        this.ctor.PagedDataService.get(this.ctor.$jsnbt.db.nodes.get, {
+            parent: '',
+            entity: 'courseSet'
+        }).then(function (response) {
+            deferred.resolve(response);
+        }, function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
 
     angular.module("jsnbt-courses")
         .controller('CoursesSetsController', ['$scope', '$rootScope', '$route', '$location', '$data', '$jsnbt', '$q', '$logger', 'ModalService', 'PagedDataService', 'CoursesSetService', CoursesSetsController]);

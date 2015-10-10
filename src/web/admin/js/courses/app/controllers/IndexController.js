@@ -17,6 +17,8 @@
             body: 'tutors assigned to courses with minimum profile',
             image: 'img/courses/tutors.png'
         }];
+
+        this.init();
     };
     CoursesIndexController.prototype = Object.create(jsnbt.controllers.ControllerBase.prototype);
 

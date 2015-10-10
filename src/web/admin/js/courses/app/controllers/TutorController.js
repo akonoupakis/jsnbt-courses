@@ -13,7 +13,7 @@
 
         $scope.imageTip = undefined;
 
-        $scope.enqueue('preloading', function () {
+        this.enqueue('preloading', function () {
             var deferred = $q.defer();
 
             $data.settings.get({
@@ -37,7 +37,7 @@
             return deferred.promise;
         });
 
-        $scope.enqueue('set', function () {
+        this.enqueue('set', function () {
             var deferred = $q.defer();
 
             if ($scope.item &&
@@ -53,7 +53,7 @@
         });
 
 
-        $scope.init().catch(function (ex) {
+        this.init().catch(function (ex) {
             logger.error(ex);
         });
     };

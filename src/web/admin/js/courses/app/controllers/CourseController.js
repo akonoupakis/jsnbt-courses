@@ -4,10 +4,10 @@
     var CoursesCourseController = function ($scope, $rootScope, $route, $location, $q, $data, $jsnbt, $logger) {
         jsnbt.controllers.NodeFormControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
+        var self = this;
+
         var logger = $logger.create('CoursesCourseController');
-
-        $scope.offset = _.str.trim($scope.prefix || '', '/').split('/').length;
-
+        
         $scope.imageSize = {
             teaser: {
                 height: undefined,
@@ -24,7 +24,7 @@
             body: undefined
         };
 
-        $scope.enqueue('preloading', function () {
+        this.enqueue('preloading', function () {
             var deferred = $q.defer();
 
             $data.settings.get({
@@ -54,10 +54,10 @@
             return deferred.promise;
         });
         
-        $scope.enqueue('set', function (node) {
+        this.enqueue('set', function (node) {
             var deferred = $q.defer();
 
-            $data.nodes.get($scope.isNew() ? $scope.id.substring(4) : node.parent).then(function (response) {
+            $data.nodes.get(self.isNew() ? $scope.id.substring(4) : node.parent).then(function (response) {
                 $scope.parent = response;
                 deferred.resolve(response);
             }, function (error) {
@@ -66,65 +66,66 @@
 
             return deferred.promise;
         });
-
-        var getBreadcrumbFn = $scope.getBreadcrumb;
-        $scope.getBreadcrumb = function () {
-            var deferred = $q.defer();
-
-            getBreadcrumbFn.apply(this, arguments).then(function (breadcrumb) {
-
-                if ($scope.node) {
-                    $scope.getNodeBreadcrumb($scope.isNew() ? { id: 'new', parent: $scope.id.substring(4) } : $scope.node, $scope.prefix).then(function (bc) {
-
-                        var offset = $scope.offset;
-                        var remaining = 1;
-                        if ($scope.prefix === '/content/nodes/courses' && $scope.offset === 3) {
-                            offset--;
-                            remaining++;
-                        }
-
-                        breadcrumb.splice(offset);
-
-                        if ($scope.prefix === '/modules/courses') {
-                            breadcrumb.push({
-                                name: 'sets',
-                                url: '/modules/courses/sets'
-                            });
-                        }
-
-                        _.each(bc, function (c) {
-                            breadcrumb.push(c);
-                        });
-
-                        if (!$scope.isNew()) {
-                            breadcrumb.splice(breadcrumb.length - 1, 0, {
-                                url: $jsnbt.entities['course'].getViewUrl($scope.node, $scope.prefix),
-                                visible: false
-                            });
-                        }
-
-                        deferred.resolve(breadcrumb);
-
-                    }, function (ex) {
-                        deferred.reject(ex);
-                    });
-                }
-                else {
-                    deferred.resolve(breadcrumb);
-                }
-
-            }).catch(function (ex) {
-                deferred.reject(ex);
-            });
-
-            return deferred.promise;
-        };
-                        
-        $scope.init().catch(function (ex) {
+        
+        this.init().catch(function (ex) {
             logger.error(ex);
         });
     };
     CoursesCourseController.prototype = Object.create(jsnbt.controllers.NodeFormControllerBase.prototype);
+
+    CoursesCourseController.prototype.getBreadcrumb = function () {
+        var deferred = this.ctor.$q.defer();
+
+        var self = this;
+
+        jsnbt.controllers.NodeFormControllerBase.prototype.getBreadcrumb.apply(this, arguments).then(function (breadcrumb) {
+
+            if (self.scope.node) {
+                self.scope.getNodeBreadcrumb(self.isNew() ? { id: 'new', parent: self.scope.id.substring(4) } : self.scope.node, self.scope.prefix).then(function (bc) {
+
+                    var offset = self.scope.offset;
+                    var remaining = 1;
+                    if (self.scope.prefix === '/content/nodes/courses' && self.scope.offset === 3) {
+                        offset--;
+                        remaining++;
+                    }
+
+                    breadcrumb.splice(offset);
+
+                    if (self.scope.prefix === '/modules/courses') {
+                        breadcrumb.push({
+                            name: 'sets',
+                            url: '/modules/courses/sets'
+                        });
+                    }
+
+                    _.each(bc, function (c) {
+                        breadcrumb.push(c);
+                    });
+
+                    if (!self.isNew()) {
+                        breadcrumb.splice(breadcrumb.length - 1, 0, {
+                            url: self.ctor.$jsnbt.entities['course'].getViewUrl(self.scope.node, self.scope.prefix),
+                            visible: false
+                        });
+                    }
+
+                    deferred.resolve(breadcrumb);
+
+                }, function (ex) {
+                    deferred.reject(ex);
+                });
+            }
+            else {
+                deferred.resolve(breadcrumb);
+            }
+
+        }).catch(function (ex) {
+            deferred.reject(ex);
+        });
+
+        return deferred.promise;
+    };
 
     angular.module("jsnbt-courses")
         .controller('CoursesCourseController', ['$scope', '$rootScope', '$route', '$location', '$q', '$data', '$jsnbt', '$logger', CoursesCourseController]);

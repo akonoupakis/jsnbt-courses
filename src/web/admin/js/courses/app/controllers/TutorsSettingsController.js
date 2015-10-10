@@ -4,7 +4,7 @@
     var SettingsController = function ($scope, $rootScope, $location, $jsnbt) {
         jsnbt.controllers.SettingsControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
-        $scope.init();
+        this.init();
     };
     SettingsController.prototype = Object.create(jsnbt.controllers.SettingsControllerBase.prototype);
 
