@@ -21,26 +21,20 @@
 
                     if (nodes.length > 0) {
 
-                        ModalService.open({
-                            title: 'oops',
-                            message: 'this set is not empty and cannot be deleted',
-                            controller: 'ErrorPromptController',
-                            template: 'tmpl/core/modals/errorPrompt.html',
-                            btn: {
-                                ok: 'ok',
-                                cancel: false
-                            }
+                        ModalService.prompt(function (x) {
+                            x.title('oops');
+                            x.message('this set is not empty and cannot be deleted');
                         }).then(function (result) {
                             deferred.resolve(false);
+                        }).catch(function (ex) {
+                            deferred.reject(ex);
                         });
 
                     }
                     else {
 
-                        ModalService.open({
-                            title: 'are you sure you want to permanently delete the set ' + node.title[$scope.defaults.language] + '?',
-                            controller: 'DeletePromptController',
-                            template: 'tmpl/core/modals/deletePrompt.html'
+                        ModalService.confirm(function (x) {
+                            x.title('are you sure you want to permanently delete the set ' + node.title[$scope.defaults.language] + '?');
                         }).then(function (result) {
                             if (result) {
                                 $data.nodes.del(node.id).then(function (nodeDeleteResults) {
@@ -49,7 +43,10 @@
                                     deferred.reject(nodeDeleteError);
                                 });
                             }
+                        }).catch(function (ex) {
+                            deferred.reject(ex);
                         });
+
                     }
 
                 }).catch(function (ex) {

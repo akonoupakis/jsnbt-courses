@@ -4,6 +4,8 @@
     var CoursesTutorController = function ($scope, $rootScope, $route, $routeParams, $location, $data, $q, $jsnbt, $logger, ModalService, PagedDataService) {
         jsnbt.controllers.DataFormControllerBase.apply(this, $rootScope.getBaseArguments($scope));
         
+        var self = this;
+
         var logger = $logger.create('CoursesTutorController');
 
         $scope.imageSize = {
@@ -44,7 +46,7 @@
                 $scope.item.content &&
                 $scope.item.content.localized &&
                 $scope.item.content.localized[$scope.defaults.language]) {
-                $scope.setTitle($scope.item.content.localized[$scope.defaults.language].firstName + ' ' + $scope.item.content.localized[$scope.defaults.language].lastName);
+                self.setTitle($scope.item.content.localized[$scope.defaults.language].firstName + ' ' + $scope.item.content.localized[$scope.defaults.language].lastName);
             }
             
             deferred.resolve();
