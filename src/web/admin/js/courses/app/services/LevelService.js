@@ -4,7 +4,7 @@
     "use strict";
 
     angular.module("jsnbt-courses")
-        .factory('CoursesLevelService', ['$q', '$jsnbt', '$data', 'ModalService', function ($q, $jsnbt, $data, ModalService) {
+        .factory('CoursesLevelService', ['$rootScope', '$q', '$jsnbt', '$data', 'ModalService', function ($rootScope, $q, $jsnbt, $data, ModalService) {
             var LevelService = {};
             
             LevelService.delete = function (node) {
@@ -34,7 +34,7 @@
                     else {
 
                         ModalService.confirm(function (x) {
-                            x.title('are you sure you want to permanently delete the level ' + node.title[$scope.defaults.language] + '?');
+                            x.title('are you sure you want to permanently delete the level ' + node.title[$rootScope.defaults.language] + '?');
                         }).then(function (result) {
                             if (result) {
                                 $data.nodes.del(node.id).then(function (nodeDeleteResults) {
