@@ -93,6 +93,24 @@
         throw new Error('not implemented');
     };
 
+    var tutorsList = _.find(jsnbt.lists, function (x) {
+        return x.id === 'tutors';
+    });
+
+    if (tutorsList) {
+        tutorsList.lookupData = function (fn, mode, selected, options) {
+            fn.title('select tutors');
+            fn.template('tmpl/courses/modal/tutorSelector.html');
+            fn.scope({
+                selected: selected,
+                domain: tutorsList.domain,
+                list: tutorsList.id,
+                mode: mode,
+                options: options || {}
+            });
+        };
+    }
+
 
     angular.module("jsnbt-courses", ['ngRoute'])
     .config(['$routeProvider',
