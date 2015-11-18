@@ -1,7 +1,7 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesLevelsController = function ($scope, $rootScope, $route, $routeParams, $location, $data, $q, $jsnbt, $logger, ModalService, PagedDataService, CoursesCourseService, CoursesLevelService) {
+    var CoursesLevelsController = function ($scope, $rootScope, $route, $routeParams, $location, $data, $q, $jsnbt, $logger, ModalService, AuthService, PagedDataService, CoursesCourseService, CoursesLevelService) {
         jsnbt.controllers.ListControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         var self = this;
@@ -34,7 +34,7 @@
         });
 
         $scope.canCreate = function () {
-            return true;
+            return AuthService.isAuthorized($scope.current.user, 'nodes:courseLevel', 'C');
         };
 
         $scope.create = function () {
@@ -43,7 +43,7 @@
         };
 
         $scope.canEdit = function () {
-            return true;
+            return AuthService.isAuthorized($scope.current.user, 'nodes:course', 'U');
         };
 
         $scope.edit = function () {
@@ -52,7 +52,7 @@
         };
 
         $scope.canDelete = function () {
-            return true;
+            return AuthService.isAuthorized($scope.current.user, 'nodes:course', 'D');
         };
 
         $scope.delete = function () {
@@ -67,7 +67,7 @@
 
         $scope.gridFn = {
             canEdit: function (node) {
-                return true;
+                return AuthService.isAuthorized($scope.current.user, 'nodes:' + node.entity, 'U');
             },
 
             edit: function (node) {
@@ -76,7 +76,7 @@
             },
 
             canDelete: function (node) {
-                return true;
+                return AuthService.isAuthorized($scope.current.user, 'nodes:' + node.entity, 'D');
             },
 
             delete: function (node) {
@@ -157,5 +157,5 @@
     };
 
     angular.module("jsnbt-courses")
-        .controller('CoursesLevelsController', ['$scope', '$rootScope', '$route', '$routeParams', '$location', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'PagedDataService', 'CoursesCourseService', 'CoursesLevelService', CoursesLevelsController]);
+        .controller('CoursesLevelsController', ['$scope', '$rootScope', '$route', '$routeParams', '$location', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'AuthService', 'PagedDataService', 'CoursesCourseService', 'CoursesLevelService', CoursesLevelsController]);
 })();

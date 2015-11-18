@@ -1,7 +1,7 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesCoursesController = function ($scope, $rootScope, $route, $routeParams, $location, $data, $q, $jsnbt, $logger, ModalService, PagedDataService, CoursesSetService, CoursesCourseService) {
+    var CoursesCoursesController = function ($scope, $rootScope, $route, $routeParams, $location, $data, $q, $jsnbt, $logger, ModalService, PagedDataService, CoursesSetService, CoursesCourseService, AuthService) {
         jsnbt.controllers.ListControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         var self = this;
@@ -29,7 +29,7 @@
         });
 
         $scope.canCreate = function () {
-            return true;
+            return AuthService.isAuthorized($scope.current.user, 'nodes:course', 'C');
         };
 
         $scope.create = function () {
@@ -38,7 +38,7 @@
         };
 
         $scope.canEdit = function () {
-            return true;
+            return AuthService.isAuthorized($scope.current.user, 'nodes:courseSet', 'U');
         };
 
         $scope.edit = function () {
@@ -47,7 +47,7 @@
         };
 
         $scope.canDelete = function () {
-            return true;
+            return AuthService.isAuthorized($scope.current.user, 'nodes:courseSet', 'D');
         };
 
         $scope.delete = function () {
@@ -62,7 +62,7 @@
 
         $scope.gridFn = {
             canOpen: function (node) {
-                return true;
+                return AuthService.isAuthorized($scope.current.user, 'nodes:' + $scope.entity, 'R');
             },
 
             open: function (node) {
@@ -71,7 +71,7 @@
             },
 
             canEdit: function (node) {
-                return true;
+                return AuthService.isAuthorized($scope.current.user, 'nodes:' + $scope.entity, 'U');
             },
 
             edit: function (node) {
@@ -80,7 +80,7 @@
             },
 
             canDelete: function (node) {
-                return true;
+                return AuthService.isAuthorized($scope.current.user, 'nodes:' + $scope.entity, 'D');
             },
 
             delete: function (node) {
@@ -181,5 +181,5 @@
     };
 
     angular.module("jsnbt-courses")
-        .controller('CoursesCoursesController', ['$scope', '$rootScope', '$route', '$routeParams', '$location', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'PagedDataService', 'CoursesSetService', 'CoursesCourseService', CoursesCoursesController]);
+        .controller('CoursesCoursesController', ['$scope', '$rootScope', '$route', '$routeParams', '$location', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'PagedDataService', 'CoursesSetService', 'CoursesCourseService', 'AuthService', CoursesCoursesController]);
 })();
