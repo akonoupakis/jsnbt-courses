@@ -15,7 +15,7 @@
 
         $scope.imageTip = undefined;
 
-        this.enqueue('preloading', function () {
+        this.enqueue('preloading', '', function () {
             var deferred = $q.defer();
 
             $data.settings.get({
@@ -39,7 +39,7 @@
             return deferred.promise;
         });
 
-        this.enqueue('set', function () {
+        this.enqueue('set', '', function () {
             var deferred = $q.defer();
 
             if ($scope.item &&

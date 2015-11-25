@@ -13,7 +13,7 @@
 
         $scope.title = '';
 
-        this.enqueue('watch', function () {
+        this.enqueue('watch', '', function () {
             var deferred = $q.defer();
 
             $scope.$watch('parent.title', function () {

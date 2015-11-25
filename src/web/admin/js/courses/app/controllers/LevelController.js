@@ -8,7 +8,7 @@
 
         var logger = $logger.create('CoursesLevelController');
         
-        this.enqueue('set', function (node) {
+        this.enqueue('set', '', function (node) {
             var deferred = $q.defer();
 
             $data.nodes.get(self.isNew() ? $scope.id.substring(4) : node.parent).then(function (response) {
