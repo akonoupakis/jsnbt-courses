@@ -22,11 +22,11 @@
             </ctrl-grid-footer>
             <ctrl-grid-body>
                 <ctrl-grid-column>
-                    {{ row.content.localized[language].firstName }} {{ row.content.localized[language].lastName }}
+                    {{ model.content.localized[language].firstName }} {{ model.content.localized[language].lastName }}
                 </ctrl-grid-column>
                 <ctrl-grid-buttons-column>
-                    <button class="btn btn-default glyphicon glyphicon-edit btn-sm" ng-disabled="!fn.canEdit(row)" ng-click="fn.edit(row)" />
-                    <button class="btn btn-default glyphicon glyphicon-remove btn-sm" ng-disabled="!fn.canDelete(row)" ng-click="fn.delete(row)" />
+                    <button class="btn btn-default glyphicon glyphicon-edit btn-sm" ng-disabled="!fn.canEdit(model)" ng-click="fn.edit(model)" />
+                    <button class="btn btn-default glyphicon glyphicon-remove btn-sm" ng-disabled="!fn.canDelete(model)" ng-click="fn.delete(model)" />
                 </ctrl-grid-buttons-column>
             </ctrl-grid-body>
         </ctrl-grid>
