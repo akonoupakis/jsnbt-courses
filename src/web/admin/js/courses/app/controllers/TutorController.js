@@ -42,11 +42,11 @@
         this.enqueue('set', '', function () {
             var deferred = $q.defer();
 
-            if ($scope.item &&
-                $scope.item.content &&
-                $scope.item.content.localized &&
-                $scope.item.content.localized[$scope.defaults.language]) {
-                self.setTitle($scope.item.content.localized[$scope.defaults.language].firstName + ' ' + $scope.item.content.localized[$scope.defaults.language].lastName);
+            if ($scope.model &&
+                $scope.model.content &&
+                $scope.model.content.localized &&
+                $scope.model.content.localized[$scope.defaults.language]) {
+                self.setTitle($scope.model.content.localized[$scope.defaults.language].firstName + ' ' + $scope.model.content.localized[$scope.defaults.language].lastName);
             }
             
             deferred.resolve();
@@ -54,6 +54,20 @@
             return deferred.promise;
         });
 
+        this.enqueue('published', '', function () {
+            var deferred = $q.defer();
+
+            if ($scope.model &&
+                $scope.model.content &&
+                $scope.model.content.localized &&
+                $scope.model.content.localized[$scope.defaults.language]) {
+                self.setTitle($scope.model.content.localized[$scope.defaults.language].firstName + ' ' + $scope.model.content.localized[$scope.defaults.language].lastName);
+            }
+
+            deferred.resolve();
+
+            return deferred.promise;
+        });
 
         this.init().catch(function (ex) {
             logger.error(ex);
