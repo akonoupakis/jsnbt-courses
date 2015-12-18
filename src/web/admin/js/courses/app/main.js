@@ -7,7 +7,7 @@
 
     setEntity.editable = true;
     setEntity.viewable = true;
-    setEntity.deletable = true;
+    setEntity.deletable = true; 
 
     setEntity.getCreateUrl = function (node, prefix) {
         var prfx = prefix || _prefix;
@@ -18,10 +18,10 @@
         return prfx + '/set/new' + (node ? '-' + node.id : '');
     };
     setEntity.getEditUrl = function (node, prefix) {
-        var prfx = prefix || _prefix;
+        var prfx = prefix || _prefix; 
 
-        if (prfx === '/content/nodes')
-            prfx += '/courses';
+        if (prfx === '/content/nodes') 
+            prfx += '/courses'; 
 
         return prfx + '/set/' + node.id;
     };
