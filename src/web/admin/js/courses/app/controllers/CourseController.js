@@ -80,8 +80,8 @@
 
         jsnbt.controllers.NodeFormControllerBase.prototype.getBreadcrumb.apply(this, arguments).then(function (breadcrumb) {
 
-            if (self.scope.node) {
-                self.scope.getNodeBreadcrumb(self.isNew() ? { id: 'new', parent: self.scope.id.substring(4) } : self.scope.node, self.scope.prefix).then(function (bc) {
+            if (self.scope.model) {
+                self.scope.getNodeBreadcrumb(self.isNew() ? { id: 'new', parent: self.scope.id.substring(4) } : self.scope.model, self.scope.prefix).then(function (bc) {
 
                     var offset = self.scope.offset;
                     var remaining = 1;
@@ -105,7 +105,7 @@
 
                     if (!self.isNew()) {
                         breadcrumb.splice(breadcrumb.length - 1, 0, {
-                            url: self.ctor.$jsnbt.entities['course'].getViewUrl(self.scope.node, self.scope.prefix),
+                            url: self.ctor.$jsnbt.entities['course'].getViewUrl(self.scope.model, self.scope.prefix),
                             visible: false
                         });
                     }
