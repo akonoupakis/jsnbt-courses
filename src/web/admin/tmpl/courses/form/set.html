@@ -1,6 +1,8 @@
 ﻿<div class="row" id="page-content-body" data-scrollspy="body">
-    <ctrl-html class="col-md-12" ng-model="node.content.localized[language].body" ng-height="200" ng-max-height="400" ng-validating="node.active[language]" ng-required="true" ng-label="body"></ctrl-html>
+    <ctrl-html class="col-sm-12" ng-model="model.content.localized[language].body" ng-height="200" ng-max-height="400" ng-validating="model.active[language]" ng-label="body"></ctrl-html>
 </div>
-<div class="row" id="page-content-courses" data-scrollspy="courses">
-    <ctrl-node-list class="col-md-12" language="defaults.language" ng-model="node.content.courses" ng-domain="'courses'" ng-options="{ entities: ['course'], parentId: id }" ng-label="courses"></ctrl-node-list>
+<div class="row" id="page-content-courses" data-scrollspy="courses" ng-show="entity.properties.courses">
+    <ctrl-node-list class="col-sm-12" ng-language="defaults.language" ng-model="model.content.courses" ng-domain="'courses'" ng-disabled="!entity.properties.courses" ng-entities="['course']" ng-options="{ parentId: id }" ng-label="courses">
+        {{model.title[language]}}
+    </ctrl-node-list>
 </div>    

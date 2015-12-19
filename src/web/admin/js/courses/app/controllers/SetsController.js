@@ -1,28 +1,15 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesSetsController = function ($scope, $route, $rootScope, $location, $data, $jsnbt, $q, ModalService, PagedDataService, CoursesSetService) {
-        jsnbt.ListControllerBase.apply(this, $scope.getBaseArguments($scope));
+    var CoursesSetsController = function ($scope, $rootScope, $route, $location, $data, $jsnbt, $q, $logger, ModalService, AuthService, PagedDataService, CoursesSetService) {
+        jsnbt.controllers.ListControllerBase.apply(this, $rootScope.getBaseArguments($scope));
+
+        var self = this;
         
-        $scope.prefix = $route.current.$$route.location ? $route.current.$$route.location.prefix : undefined;
+        var logger = $logger.create('CoursesSetsController');
         
-        $scope.load = function () {
-            var deferred = $q.defer();
-
-            PagedDataService.get(jsnbt.db.nodes.get, {
-                parent: '',
-                entity: 'courseSet'
-            }).then(function (response) {
-                deferred.resolve(response);
-            }, function (error) {
-                deferred.reject(error);
-            });
-
-            return deferred.promise;
-        };
-
         $scope.canViewSettings = function () {
-            return true;
+            return AuthService.isInRole($scope.current.user, 'sa');
         };
 
         $scope.viewSettings = function () {
@@ -30,7 +17,7 @@
         };
 
         $scope.canCreate = function () {
-            return true;
+            return AuthService.isAuthorized($scope.current.user, 'nodes:courseSet', 'C');
         };
 
         $scope.create = function () {
@@ -38,44 +25,63 @@
             $location.next(url);
         };
 
-        $scope.gridFn.canOpen = function (node) {
-            return true;
-        };
+        $scope.gridFn = {
+            canOpen: function (node) {
+                return AuthService.isAuthorized($scope.current.user, 'nodes:' + node.entity, 'R');
+            },
 
-        $scope.gridFn.open = function (node) {
-            var url = $jsnbt.entities[node.entity].getViewUrl(node, $scope.prefix);
-            $location.next(url);
-        };
+            open: function (node) {
+                var url = $jsnbt.entities[node.entity].getViewUrl(node, $scope.prefix);
+                $location.next(url);
+            },
 
-        $scope.gridFn.canEdit = function (node) {
-            return true;
-        };
+            canEdit: function (node) {
+                return AuthService.isAuthorized($scope.current.user, 'nodes:' + node.entity, 'U');
+            },
 
-        $scope.gridFn.edit = function (node) {
-            var url = $jsnbt.entities[node.entity].getEditUrl(node, $scope.prefix);
-            $location.next(url);
-        };
+            edit: function (node) {
+                var url = $jsnbt.entities[node.entity].getEditUrl(node, $scope.prefix);
+                $location.next(url);
+            },
 
-        $scope.gridFn.canDelete = function (node) {
-            return true;
-        };
+            canDelete: function (node) {
+                return AuthService.isAuthorized($scope.current.user, 'nodes:' + node.entity, 'D');
+            },
 
-        $scope.gridFn.delete = function (node) {
+            delete: function (node) {
 
-            CoursesSetService.delete(node).then(function (deleted) {
-                if (deleted) {
-                    $scope.remove(node);
-                }
-            }).catch(function (ex) {
-                throw ex;
-            });
-        };
+                CoursesSetService.delete(node).then(function (deleted) {
+                    if (deleted) {
+                        self.remove(node);
+                    }
+                }).catch(function (ex) {
+                    throw ex;
+                });
+            }
+        }
 
-        $scope.init();
+        this.init().catch(function (ex) {
+            logger.error(ex);
+        });
 
     };
-    CoursesSetsController.prototype = Object.create(jsnbt.ListControllerBase.prototype);
+    CoursesSetsController.prototype = Object.create(jsnbt.controllers.ListControllerBase.prototype);
+
+    CoursesSetsController.prototype.load = function () {
+        var deferred = this.ctor.$q.defer();
+
+        this.ctor.PagedDataService.get(this.ctor.$jsnbt.db.nodes.get, {
+            parent: '',
+            entity: 'courseSet'
+        }).then(function (response) {
+            deferred.resolve(response);
+        }, function (error) {
+            deferred.reject(error);
+        });
+
+        return deferred.promise;
+    };
 
     angular.module("jsnbt-courses")
-        .controller('CoursesSetsController', ['$scope', '$route', '$rootScope', '$location', '$data', '$jsnbt', '$q', 'ModalService', 'PagedDataService', 'CoursesSetService', CoursesSetsController]);
+        .controller('CoursesSetsController', ['$scope', '$rootScope', '$route', '$location', '$data', '$jsnbt', '$q', '$logger', 'ModalService', 'AuthService', 'PagedDataService', 'CoursesSetService', CoursesSetsController]);
 })();

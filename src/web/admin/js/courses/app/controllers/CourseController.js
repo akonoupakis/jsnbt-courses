@@ -1,12 +1,13 @@
 ﻿;(function () {
     "use strict";
 
-    var CoursesCourseController = function ($scope, $route, $rootScope, $location, $q, $data, $jsnbt) {
-        jsnbt.NodeFormControllerBase.apply(this, $scope.getBaseArguments($scope));
+    var CoursesCourseController = function ($scope, $rootScope, $route, $location, $q, $data, $jsnbt, $logger) {
+        jsnbt.controllers.NodeFormControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
-        $scope.prefix = $route.current.$$route.location ? $route.current.$$route.location.prefix : undefined;
-        $scope.offset = _.str.trim($scope.prefix || '', '/').split('/').length;
+        var self = this;
 
+        var logger = $logger.create('CoursesCourseController');
+        
         $scope.imageSize = {
             teaser: {
                 height: undefined,
@@ -23,63 +24,7 @@
             body: undefined
         };
 
-        var setLocationFn = $scope.setLocation;
-        $scope.setLocation = function () {
-            var deferred = $q.defer();
-
-            setLocationFn.apply(this, arguments).then(function (response) {
-                $scope.getNodeBreadcrumb($scope.isNew() ? { id: 'new', parent: $scope.id.substring(4) } : $scope.node, $scope.prefix).then(function (bc) {
-
-                    var offset = $scope.offset;
-                    var remaining = 1;
-                    if ($scope.prefix === '/content/nodes/courses' && $scope.offset === 3) {
-                        offset--;
-                        remaining++;
-                    }
-
-                    response.splice(offset);
-
-                    if ($scope.prefix === '/modules/courses') {
-                        response.push({
-                            name: 'sets',
-                            url: '/modules/courses/sets'
-                        });
-                    }
-
-                    _.each(bc, function (c) {
-                        response.push(c);
-                    });
-
-                    if ($scope.entity) {
-
-                        var previous = {
-                            url: $jsnbt.entities['course'].getViewUrl($scope.node, $scope.prefix),
-                            visible: false
-                        };
-
-                        response.splice(response.length - 1, 0, previous);
-                    }
-
-                    deferred.resolve(response);
-
-                }, function (ex) {
-                    deferred.reject(ex);
-                });
-            }).catch(function (ex) {
-                deferred.reject(ex);
-            });
-
-            return deferred.promise;
-        };
-
-        $scope.$watch('parent.title', function () {
-            if (!$scope.parent)
-                return;
-
-            $scope.setLocation();
-        });
-
-        $scope.enqueue('preload', function () {
+        this.enqueue('preloading', '', function () {
             var deferred = $q.defer();
 
             $data.settings.get({
@@ -108,25 +53,81 @@
 
             return deferred.promise;
         });
-
-        $scope.enqueue('load', function () {
+        
+        this.enqueue('set', '', function (node) {
             var deferred = $q.defer();
 
-            $data.nodes.get($scope.isNew() ? $scope.id.substring(4) : $scope.node.parent).then(function (response) {
+            $data.nodes.get(self.isNew() ? $scope.id.substring(4) : node.parent).then(function (response) {
                 $scope.parent = response;
-                deferred.resolve();
+                deferred.resolve(response);
             }, function (error) {
-                deferred.reject();
+                deferred.reject(error);
             });
 
             return deferred.promise;
         });
-
-        $scope.init();
+        
+        this.init().catch(function (ex) {
+            logger.error(ex);
+        });
     };
-    CoursesCourseController.prototype = Object.create(jsnbt.NodeFormControllerBase.prototype);
+    CoursesCourseController.prototype = Object.create(jsnbt.controllers.NodeFormControllerBase.prototype);
+
+    CoursesCourseController.prototype.getBreadcrumb = function () {
+        var deferred = this.ctor.$q.defer();
+
+        var self = this;
+
+        jsnbt.controllers.NodeFormControllerBase.prototype.getBreadcrumb.apply(this, arguments).then(function (breadcrumb) {
+
+            if (self.scope.model) {
+                self.scope.getNodeBreadcrumb(self.isNew() ? { id: 'new', parent: self.scope.id.substring(4) } : self.scope.model, self.scope.prefix).then(function (bc) {
+
+                    var offset = self.scope.offset;
+                    var remaining = 1;
+                    if (self.scope.prefix === '/content/nodes/courses' && self.scope.offset === 3) {
+                        offset--;
+                        remaining++;
+                    }
+
+                    breadcrumb.splice(offset);
+
+                    if (self.scope.prefix === '/modules/courses') {
+                        breadcrumb.push({
+                            name: 'sets',
+                            url: '/modules/courses/sets'
+                        });
+                    }
+
+                    _.each(bc, function (c) {
+                        breadcrumb.push(c);
+                    });
+
+                    if (!self.isNew()) {
+                        breadcrumb.splice(breadcrumb.length - 1, 0, {
+                            url: self.ctor.$jsnbt.entities['course'].getViewUrl(self.scope.model, self.scope.prefix),
+                            visible: false
+                        });
+                    }
+
+                    deferred.resolve(breadcrumb);
+
+                }, function (ex) {
+                    deferred.reject(ex);
+                });
+            }
+            else {
+                deferred.resolve(breadcrumb);
+            }
+
+        }).catch(function (ex) {
+            deferred.reject(ex);
+        });
+
+        return deferred.promise;
+    };
 
     angular.module("jsnbt-courses")
-        .controller('CoursesCourseController', ['$scope', '$route', '$rootScope', '$location', '$q', '$data', '$jsnbt', CoursesCourseController]);
+        .controller('CoursesCourseController', ['$scope', '$rootScope', '$route', '$location', '$q', '$data', '$jsnbt', '$logger', CoursesCourseController]);
 
 })();

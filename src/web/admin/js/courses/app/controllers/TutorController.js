@@ -1,9 +1,13 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesTutorController = function ($scope, $route, $rootScope, $routeParams, $location, $data, $q, $jsnbt, ModalService, PagedDataService) {
-        jsnbt.DataFormControllerBase.apply(this, $scope.getBaseArguments($scope));
+    var CoursesTutorController = function ($scope, $rootScope, $route, $routeParams, $location, $data, $q, $jsnbt, $logger, ModalService, PagedDataService) {
+        jsnbt.controllers.DataFormControllerBase.apply(this, $rootScope.getBaseArguments($scope));
         
+        var self = this;
+
+        var logger = $logger.create('CoursesTutorController');
+
         $scope.imageSize = {
             height: undefined,
             width: undefined
@@ -11,7 +15,7 @@
 
         $scope.imageTip = undefined;
 
-        $scope.enqueue('preload', function () {
+        this.enqueue('preloading', '', function () {
             var deferred = $q.defer();
 
             $data.settings.get({
@@ -35,10 +39,42 @@
             return deferred.promise;
         });
 
-        $scope.init();
+        this.enqueue('set', '', function () {
+            var deferred = $q.defer();
+
+            if ($scope.model &&
+                $scope.model.content &&
+                $scope.model.content.localized &&
+                $scope.model.content.localized[$scope.defaults.language]) {
+                self.setTitle($scope.model.content.localized[$scope.defaults.language].firstName + ' ' + $scope.model.content.localized[$scope.defaults.language].lastName);
+            }
+            
+            deferred.resolve();
+
+            return deferred.promise;
+        });
+
+        this.enqueue('published', '', function () {
+            var deferred = $q.defer();
+
+            if ($scope.model &&
+                $scope.model.content &&
+                $scope.model.content.localized &&
+                $scope.model.content.localized[$scope.defaults.language]) {
+                self.setTitle($scope.model.content.localized[$scope.defaults.language].firstName + ' ' + $scope.model.content.localized[$scope.defaults.language].lastName);
+            }
+
+            deferred.resolve();
+
+            return deferred.promise;
+        });
+
+        this.init().catch(function (ex) {
+            logger.error(ex);
+        });
     };
-    CoursesTutorController.prototype = Object.create(jsnbt.DataFormControllerBase.prototype);
+    CoursesTutorController.prototype = Object.create(jsnbt.controllers.DataFormControllerBase.prototype);
 
     angular.module("jsnbt-courses")
-        .controller('CoursesTutorController', ['$scope', '$route', '$rootScope', '$routeParams', '$location', '$data', '$q', '$jsnbt', 'ModalService', 'PagedDataService', CoursesTutorController]);
+        .controller('CoursesTutorController', ['$scope', '$rootScope', '$route', '$routeParams', '$location', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'PagedDataService', CoursesTutorController]);
 })();

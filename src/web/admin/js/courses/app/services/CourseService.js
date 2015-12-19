@@ -4,11 +4,10 @@
     "use strict";
 
     angular.module("jsnbt-courses")
-        .factory('CoursesCourseService', ['$q', '$jsnbt', '$data', 'ModalService', function ($q, $jsnbt, $data, ModalService) {
+        .factory('CoursesCourseService', ['$rootScope', '$q', '$jsnbt', '$data', 'ModalService', function ($rootScope, $q, $jsnbt, $data, ModalService) {
             var CourseService = {};
             
-            CourseService.delete = function (node) {
-
+            CourseService.delete = function (node) {                                
                 var deferred = $q.defer();
 
                 $data.nodes.get({
@@ -21,26 +20,20 @@
 
                     if (nodes.length > 0) {
 
-                        ModalService.open({
-                            title: 'oops',
-                            message: 'this course is not empty and cannot be deleted',
-                            controller: 'ErrorPromptController',
-                            template: 'tmpl/core/modals/errorPrompt.html',
-                            btn: {
-                                ok: 'ok',
-                                cancel: false
-                            }
+                        ModalService.prompt(function (x) {
+                            x.title('oops');
+                            x.message('this course is not empty and cannot be deleted');
                         }).then(function (result) {
                             deferred.resolve(false);
+                        }).catch(function (ex) {
+                            deferred.reject(ex);
                         });
 
                     }
                     else {
 
-                        ModalService.open({
-                            title: 'are you sure you want to permanently delete the course ' + node.title[$scope.defaults.language] + '?',
-                            controller: 'DeletePromptController',
-                            template: 'tmpl/core/modals/deletePrompt.html'
+                        ModalService.confirm(function (x) {
+                            x.title('are you sure you want to permanently delete the course ' + node.title[$rootScope.defaults.language] + '?');
                         }).then(function (result) {
                             if (result) {
                                 $data.nodes.del(node.id).then(function (nodeDeleteResults) {
@@ -49,7 +42,10 @@
                                     deferred.reject(nodeDeleteError);
                                 });
                             }
+                        }).catch(function (ex) {
+                            deferred.reject(ex);
                         });
+
                     }
 
                 }).catch(function (ex) {

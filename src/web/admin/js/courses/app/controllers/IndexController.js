@@ -1,8 +1,8 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesIndexController = function ($scope, $jsnbt, $location) {
-        jsnbt.ControllerBase.apply(this, $scope.getBaseArguments($scope));
+    var CoursesIndexController = function ($scope, $rootScope, $jsnbt, $location) {
+        jsnbt.controllers.ControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         $scope.items = [{
             id: 'sets',
@@ -17,10 +17,12 @@
             body: 'tutors assigned to courses with minimum profile',
             image: 'img/courses/tutors.png'
         }];
+
+        this.init();
     };
-    CoursesIndexController.prototype = Object.create(jsnbt.ControllerBase.prototype);
+    CoursesIndexController.prototype = Object.create(jsnbt.controllers.ControllerBase.prototype);
 
 
     angular.module("jsnbt-courses")
-        .controller('CoursesIndexController', ['$scope', '$jsnbt', '$location', CoursesIndexController]);
+        .controller('CoursesIndexController', ['$scope', '$rootScope', '$jsnbt', '$location', CoursesIndexController]);
 })();

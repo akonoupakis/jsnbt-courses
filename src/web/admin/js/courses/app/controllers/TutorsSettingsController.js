@@ -1,18 +1,14 @@
 ﻿;(function () {
     "use strict";
 
-    var CoursesTutorsSettingsController = function ($scope, $location, $jsnbt) {
-        jsnbt.SettingsControllerBase.apply(this, $scope.getBaseArguments($scope));
+    var SettingsController = function ($scope, $rootScope, $location, $jsnbt) {
+        jsnbt.controllers.SettingsControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
-        $scope.back = function () {
-            $location.previous('/modules/courses/tutors');
-        };
-        
-        $scope.init();
+        this.init();
     };
-    CoursesTutorsSettingsController.prototype = Object.create(jsnbt.SettingsControllerBase.prototype);
+    SettingsController.prototype = Object.create(jsnbt.controllers.SettingsControllerBase.prototype);
 
     angular.module("jsnbt-courses")
-        .controller('CoursesTutorsSettingsController', ['$scope', '$location', '$jsnbt', CoursesTutorsSettingsController]);
+        .controller('CoursesTutorsSettingsController', ['$scope', '$rootScope', '$location', '$jsnbt', SettingsController]);
 
 })();

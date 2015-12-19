@@ -1,0 +1,16 @@
+﻿<div class="data-select">
+    <ctrl-grid class="table-striped" ng-model="model" ng-selectable="true" ng-select-mode="mode" ng-language="defaults.language">
+        <ctrl-grid-header>
+            <ctrl-grid-header-column>name</ctrl-grid-header-column>
+        </ctrl-grid-header>
+        <ctrl-grid-footer>
+            <ctrl-grid-infinite-scroll></ctrl-grid-infinite-scroll>
+            <ctrl-grid-empty>no tutors</ctrl-grid-empty>
+        </ctrl-grid-footer>
+        <ctrl-grid-body>
+            <ctrl-grid-column>
+                {{ model.content.localized[language].firstName }} {{ model.content.localized[language].lastName }}
+            </ctrl-grid-column>
+        </ctrl-grid-body>
+    </ctrl-grid>
+</div>

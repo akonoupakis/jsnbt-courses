@@ -1,102 +1,35 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesCoursesController = function ($scope, $route, $rootScope, $routeParams, $location, $data, $q, $jsnbt, ModalService, PagedDataService, CoursesSetService, CoursesCourseService) {
-        jsnbt.ListControllerBase.apply(this, $scope.getBaseArguments($scope));
+    var CoursesCoursesController = function ($scope, $rootScope, $route, $routeParams, $location, $data, $q, $jsnbt, $logger, ModalService, PagedDataService, CoursesSetService, CoursesCourseService, AuthService) {
+        jsnbt.controllers.ListControllerBase.apply(this, $rootScope.getBaseArguments($scope));
+
+        var self = this;
         
+        var logger = $logger.create('CoursesCoursesController');
+
         $scope.id = $routeParams.id;
         $scope.parent = undefined;
-        $scope.prefix = $route.current.$$route.location ? $route.current.$$route.location.prefix : undefined;
-        $scope.offset = _.str.trim($scope.prefix || '', '/').split('/').length;
 
         $scope.title = '';
 
-        $scope.load = function () {
-            var loadParent = function () {
-                var deferred = $q.defer();
-
-                $data.nodes.get($scope.id).then(function (response) {
-                    $scope.parent = response;
-                    deferred.resolve(response);
-                }, function (error) {
-                    deferred.reject(error);
-                });
-
-                return deferred.promise;
-            };
-
-            var loadData = function () {
-                var deferred = $q.defer();
-
-                PagedDataService.get(jsnbt.db.nodes.get, {
-                    parent: $scope.id,
-                    entity: 'course'
-                }).then(function (response) {
-                    deferred.resolve(response);
-                }, function (error) {
-                    deferred.reject(error);
-                });
-
-                return deferred.promise;
-            };
-
-            var d = $q.defer();
-
-            $q.all([loadParent(), loadData()]).then(function (results) {
-                var parentResult = results[0];
-                var dataResults = results[1];
-                d.resolve(dataResults);
-            }, function (ex) {
-                d.reject(ex);
-            });
-
-            return d.promise;
-        };
-
-        var setLocationFn = $scope.setLocation;
-        $scope.setLocation = function () {
+        this.enqueue('watch', '', function () {
             var deferred = $q.defer();
 
-            setLocationFn.apply(this, arguments).then(function (response) {
+            $scope.$watch('parent.title', function () {
+                if (!$scope.parent)
+                    return;
 
-                var offset = $scope.offset;
-
-                if ($scope.prefix === '/content/nodes/courses') {
-                    offset--;
-                }
-
-                if ($scope.prefix === '/modules/courses') {
-                    offset++;
-                    response[offset - 1].name = 'sets';
-                    response[offset - 1].url = '/modules/courses/sets';
-                }
-
-                response.splice(offset);
-
-                response.push({
-                    active: true,
-                    name: $scope.title
-                });
-                
-                deferred.resolve(response);
-
-            }).catch(function (ex) {
-                deferred.reject(ex);
+                $scope.title = $scope.parent.title[$scope.defaults.language];
             });
 
+            deferred.resolve();
+
             return deferred.promise;
-        };
-
-        $scope.$watch('parent.title', function () {
-            if (!$scope.parent)
-                return;
-
-            $scope.title = $scope.parent.title[$scope.defaults.language];
-            $scope.setLocation();
         });
 
         $scope.canCreate = function () {
-            return true;
+            return AuthService.isAuthorized($scope.current.user, 'nodes:course', 'C');
         };
 
         $scope.create = function () {
@@ -105,7 +38,7 @@
         };
 
         $scope.canEdit = function () {
-            return true;
+            return AuthService.isAuthorized($scope.current.user, 'nodes:courseSet', 'U');
         };
 
         $scope.edit = function () {
@@ -114,7 +47,7 @@
         };
 
         $scope.canDelete = function () {
-            return true;
+            return AuthService.isAuthorized($scope.current.user, 'nodes:courseSet', 'D');
         };
 
         $scope.delete = function () {
@@ -127,43 +60,126 @@
             });
         }
 
-        $scope.gridFn.canOpen = function (node) {
-            return true;
-        };
+        $scope.gridFn = {
+            canOpen: function (node) {
+                return AuthService.isAuthorized($scope.current.user, 'nodes:' + $scope.entity, 'R');
+            },
 
-        $scope.gridFn.open = function (node) {
-            var url = $jsnbt.entities[node.entity].getViewUrl(node, $scope.prefix);
-            $location.next(url);
-        };
+            open: function (node) {
+                var url = $jsnbt.entities[node.entity].getViewUrl(node, $scope.prefix);
+                $location.next(url);
+            },
 
-        $scope.gridFn.canEdit = function (node) {
-            return true;
-        };
+            canEdit: function (node) {
+                return AuthService.isAuthorized($scope.current.user, 'nodes:' + $scope.entity, 'U');
+            },
 
-        $scope.gridFn.edit = function (node) {
-            var url = $jsnbt.entities[node.entity].getEditUrl(node, $scope.prefix);
-            $location.next(url);
-        };
+            edit: function (node) {
+                var url = $jsnbt.entities[node.entity].getEditUrl(node, $scope.prefix);
+                $location.next(url);
+            },
 
-        $scope.gridFn.canDelete = function (node) {
-            return true;
-        };
+            canDelete: function (node) {
+                return AuthService.isAuthorized($scope.current.user, 'nodes:' + $scope.entity, 'D');
+            },
 
-        $scope.gridFn.delete = function (node) {
-            CoursesCourseService.delete(node).then(function (deleted) {
-                if (deleted) {
-                    $scope.remove(node);
-                }
-            }).catch(function (ex) {
-                throw ex;
-            });
-        };
+            delete: function (node) {
+                CoursesCourseService.delete(node).then(function (deleted) {
+                    if (deleted) {
+                        self.remove(node);
+                    }
+                }).catch(function (ex) {
+                    throw ex;
+                });
+            }
+        }
 
-        $scope.init();
+        this.init().catch(function (ex) {
+            logger.error(ex);
+        });
 
     };
-    CoursesCoursesController.prototype = Object.create(jsnbt.ListControllerBase.prototype);
+    CoursesCoursesController.prototype = Object.create(jsnbt.controllers.ListControllerBase.prototype);
+
+    CoursesCoursesController.prototype.load = function () {
+        var self = this;
+
+        var loadParent = function () {
+            var deferred = self.ctor.$q.defer();
+
+            self.ctor.$data.nodes.get(self.scope.id).then(function (response) {
+                self.scope.parent = response;
+                deferred.resolve(response);
+            }, function (error) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
+        };
+
+        var loadData = function () {
+            var deferred = self.ctor.$q.defer();
+
+            self.ctor.PagedDataService.get(self.ctor.$jsnbt.db.nodes.get, {
+                parent: self.scope.id,
+                entity: 'course'
+            }).then(function (response) {
+                deferred.resolve(response);
+            }, function (error) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
+        };
+
+        var d = self.ctor.$q.defer();
+
+        self.ctor.$q.all([loadParent(), loadData()]).then(function (results) {
+            var parentResult = results[0];
+            var dataResults = results[1];
+            d.resolve(dataResults);
+        }, function (ex) {
+            d.reject(ex);
+        });
+
+        return d.promise;
+    };
+
+    CoursesCoursesController.prototype.getBreadcrumb = function () {
+        var deferred = this.ctor.$q.defer();
+
+        var self = this;
+
+        jsnbt.controllers.ListControllerBase.prototype.getBreadcrumb.apply(this, arguments).then(function (breadcrumb) {
+
+            var offset = _.str.trim(self.scope.prefix || '', '/').split('/').length;
+
+            if (self.scope.prefix === '/content/nodes/courses') {
+                offset--;
+            }
+
+            if (self.scope.prefix === '/modules/courses') {
+                offset++;
+                breadcrumb[offset - 1].name = 'sets';
+                breadcrumb[offset - 1].url = '/modules/courses/sets';
+            }
+
+            breadcrumb.splice(offset);
+
+            breadcrumb.push({
+                active: true,
+                name: self.scope.title
+            });
+
+            deferred.resolve(breadcrumb);
+
+        }).catch(function (ex) {
+            deferred.reject(ex);
+        });
+
+        return deferred.promise;
+    };
 
     angular.module("jsnbt-courses")
-        .controller('CoursesCoursesController', ['$scope', '$route', '$rootScope', '$routeParams', '$location', '$data', '$q', '$jsnbt', 'ModalService', 'PagedDataService', 'CoursesSetService', 'CoursesCourseService', CoursesCoursesController]);
+        .controller('CoursesCoursesController', ['$scope', '$rootScope', '$route', '$routeParams', '$location', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'PagedDataService', 'CoursesSetService', 'CoursesCourseService', 'AuthService', CoursesCoursesController]);
 })();

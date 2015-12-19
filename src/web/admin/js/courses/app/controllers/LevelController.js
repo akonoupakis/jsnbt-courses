@@ -1,76 +1,75 @@
 ﻿;(function () {
     "use strict";
 
-    var CoursesLevelController = function ($scope, $route, $rootScope, $location, $q, $data) {
-        jsnbt.NodeFormControllerBase.apply(this, $scope.getBaseArguments($scope));
+    var CoursesLevelController = function ($scope, $rootScope, $route, $location, $q, $data, $logger) {
+        jsnbt.controllers.NodeFormControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
-        $scope.prefix = $route.current.$$route.location ? $route.current.$$route.location.prefix : undefined;
-        $scope.offset = _.str.trim($scope.prefix || '', '/').split('/').length;
+        var self = this;
 
-        var setLocationFn = $scope.setLocation;
-        $scope.setLocation = function () {
+        var logger = $logger.create('CoursesLevelController');
+        
+        this.enqueue('set', '', function (node) {
             var deferred = $q.defer();
 
-            setLocationFn.apply(this, arguments).then(function (response) {
-                $scope.getNodeBreadcrumb($scope.isNew() ? { id: 'new', parent: $scope.id.substring(4) } : $scope.node, $scope.prefix).then(function (bc) {
+            $data.nodes.get(self.isNew() ? $scope.id.substring(4) : node.parent).then(function (response) {
+                $scope.parent = response;
+                deferred.resolve(response);
+            }, function (error) {
+                deferred.reject(error);
+            });
 
-                    var offset = $scope.offset;
-                    var remaining = 1;
-                    if ($scope.prefix === '/content/nodes/courses' && $scope.offset === 3) {
-                        offset--;
-                        remaining++;
-                    }
+            return deferred.promise;
+        });
+ 
+        this.init().catch(function (ex) {
+            logger.error(ex);
+        });
+    };
+    CoursesLevelController.prototype = Object.create(jsnbt.controllers.NodeFormControllerBase.prototype);
 
-                    response.splice(offset);
+    CoursesLevelController.prototype.getBreadcrumb = function () {
+        var deferred = this.ctor.$q.defer();
 
-                    if ($scope.prefix === '/modules/courses') {
-                        response.push({
-                            name: 'sets',
-                            url: '/modules/courses/sets'
-                        });
-                    }
+        var self = this;
 
-                    _.each(bc, function (c) {
-                        response.push(c);
+        jsnbt.controllers.NodeFormControllerBase.prototype.getBreadcrumb.apply(this, arguments).then(function (breadcrumb) {
+
+            self.scope.getNodeBreadcrumb(self.isNew() ? { id: 'new', parent: self.scope.id.substring(4) } : self.scope.model, self.scope.prefix).then(function (bc) {
+
+                var offset = self.scope.offset;
+                var remaining = 1;
+                if (self.scope.prefix === '/content/nodes/courses' && self.scope.offset === 3) {
+                    offset--;
+                    remaining++;
+                }
+
+                breadcrumb.splice(offset);
+
+                if (self.scope.prefix === '/modules/courses') {
+                    breadcrumb.push({
+                        name: 'sets',
+                        url: '/modules/courses/sets'
                     });
+                }
 
-                    deferred.resolve(response);
-
-                }, function (ex) {
-                    deferred.reject(ex);
+                _.each(bc, function (c) {
+                    breadcrumb.push(c);
                 });
-            }).catch(function (ex) {
+
+                deferred.resolve(breadcrumb);
+
+            }, function (ex) {
                 deferred.reject(ex);
             });
 
-            return deferred.promise;
-        };
-
-        $scope.$watch('parent.title', function () {
-            if (!$scope.parent)
-                return;
-
-            $scope.setLocation();
-        });
-        
-        $scope.enqueue('load', function () {
-            var deferred = $q.defer();
-
-            $data.nodes.get($scope.isNew() ? $scope.id.substring(4) : $scope.node.parent).then(function (response) {
-                $scope.parent = response;
-                deferred.resolve();
-            }, function (error) {
-                deferred.reject();
-            });
-
-            return deferred.promise;
+        }).catch(function (ex) {
+            deferred.reject(ex);
         });
 
-        $scope.init();
+        return deferred.promise;
     };
-    CoursesLevelController.prototype = Object.create(jsnbt.NodeFormControllerBase.prototype);
 
     angular.module("jsnbt-courses")
-        .controller('CoursesLevelController', ['$scope', '$route', '$rootScope', '$location', '$q', '$data', CoursesLevelController]);
+        .controller('CoursesLevelController', ['$scope', '$rootScope', '$route', '$location', '$q', '$data', '$logger', CoursesLevelController]);
 
 })();
