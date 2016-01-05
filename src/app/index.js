@@ -28,7 +28,7 @@ module.exports = {
 
     url: {
 
-        build: function (options, next) {
+        build: function (server, options, next) {
             for (var item in options.url) {
                 if (options.node.entity === 'courseLevel') {
                     options.url[item] += '#' + options.node.id;
@@ -41,7 +41,7 @@ module.exports = {
             }
         },
         
-        resolve: function (options, next) {
+        resolve: function (server, options, next) {
 
             if (options.page) {
                 if (options.page.entity === 'courseLevel')
