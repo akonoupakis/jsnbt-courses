@@ -1,33 +1,33 @@
-﻿{
-  "name": "jsnbt-courses",
-  "version": "1.0.121",
-  "description": "A courses addon for the jsnbt cms",
-  "keywords": [
-    "jsnbt",
-    "jsonbot"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://bitbucket.org/akonoupakis/jsnbt-courses"
-  },
-  "bugs": {
-    "url": "https://bitbucket.org/akonoupakis/jsnbt-courses/issues",
-    "email": "konoupakis@gmail.com"
-  },
-  "author": {
-    "name": "Apostolis Konoupakis",
-    "email": "konoupakis@gmail.com",
-    "url": ""
-  },
-  "config": {},
-  "main": "src/app/index.js",
-  "files": [
-    "src/app/**",
-    "src/cfg/**",
-    "src/web/**"
-  ],
-  "dependencies": {
-    "underscore": "1.6.0"
-  },
-  "devDependencies": {}
+{
+	"name": "jsnbt-courses",
+	"version": "1.0.122",
+	"description": "A courses addon for the jsnbt cms",
+	"keywords": [
+		"jsnbt",
+		"jsonbot"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://bitbucket.org/akonoupakis/jsnbt-courses"
+	},
+	"bugs": {
+		"url": "https://bitbucket.org/akonoupakis/jsnbt-courses/issues",
+		"email": "konoupakis@gmail.com"
+	},
+	"author": {
+		"name": "Apostolis Konoupakis",
+		"email": "konoupakis@gmail.com",
+		"url": ""
+	},
+	"config": {},
+	"main": "src/app/index.js",
+	"files": [
+		"src/app/**",
+		"src/cfg/**",
+		"src/web/**"
+	],
+	"dependencies": {
+		"underscore": "1.6.0"
+	},
+	"devDependencies": {}
 }
