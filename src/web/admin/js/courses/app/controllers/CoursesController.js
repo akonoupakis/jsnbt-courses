@@ -120,9 +120,12 @@
         var loadData = function () {
             var deferred = self.ctor.$q.defer();
 
-            self.ctor.PagedDataService.get(self.ctor.$jsnbt.db.nodes.get, {
-                parent: self.scope.id,
-                entity: 'course'
+            self.ctor.PagedDataService.get({
+                fn: self.ctor.$jsnbt.db.nodes.get,
+                query: {
+                    parent: self.scope.id,
+                    entity: 'course'
+                }
             }).then(function (response) {
                 deferred.resolve(response);
             }, function (error) {

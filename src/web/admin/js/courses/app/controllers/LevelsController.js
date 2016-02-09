@@ -102,9 +102,12 @@
     CoursesLevelsController.prototype.load = function () {
         var deferred = this.ctor.$q.defer();
 
-        this.ctor.PagedDataService.get(this.ctor.$jsnbt.db.nodes.get, {
-            parent: this.scope.id,
-            entity: 'courseLevel'
+        this.ctor.PagedDataService.get({
+            fn: this.ctor.$jsnbt.db.nodes.get,
+            query: {
+                parent: this.scope.id,
+                entity: 'courseLevel'
+            }
         }).then(function (response) {
             deferred.resolve(response);
         }, function (error) {

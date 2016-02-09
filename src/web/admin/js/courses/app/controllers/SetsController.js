@@ -70,9 +70,12 @@
     CoursesSetsController.prototype.load = function () {
         var deferred = this.ctor.$q.defer();
 
-        this.ctor.PagedDataService.get(this.ctor.$jsnbt.db.nodes.get, {
-            parent: '',
-            entity: 'courseSet'
+        this.ctor.PagedDataService.get({
+            fn: this.ctor.$jsnbt.db.nodes.get,
+            query: {
+                parent: '',
+                entity: 'courseSet'
+            }
         }).then(function (response) {
             deferred.resolve(response);
         }, function (error) {
