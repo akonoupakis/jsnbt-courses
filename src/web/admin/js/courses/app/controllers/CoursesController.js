@@ -121,7 +121,7 @@
             var deferred = self.ctor.$q.defer();
 
             self.ctor.PagedDataService.get({
-                fn: self.ctor.$jsnbt.db.nodes.get,
+                fn: self.ctor.$jsnbt.db.nodes,
                 query: {
                     parent: self.scope.id,
                     entity: 'course'
