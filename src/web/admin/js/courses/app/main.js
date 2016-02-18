@@ -112,14 +112,14 @@
     }
 
 
-    angular.module("jsnbt-courses", ['ngRoute'])
-    .config(['$routeProvider',
-        function ($routeProvider) {
+    angular.module("jsnbt-courses", ['ngPathRouter'])
+    .config(['$routerProvider',
+        function ($routerProvider) {
 
             var TEMPLATE_BASE = jsnbt.constants.TEMPLATE_BASE;
 
-            var router = new jsnbt.ViewRouter('courses', $routeProvider);
-            
+            var router = new jsnbt.ViewRouter('courses', $routerProvider);
+
             var routes = {
                 index: function (x) {
                     x.section('courses');

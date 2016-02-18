@@ -1,14 +1,14 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesCoursesController = function ($scope, $rootScope, $route, $routeParams, $location, $data, $q, $jsnbt, $logger, ModalService, PagedDataService, CoursesSetService, CoursesCourseService, AuthService) {
+    var CoursesCoursesController = function ($scope, $rootScope, $data, $q, $jsnbt, $logger, ModalService, PagedDataService, CoursesSetService, CoursesCourseService, AuthService) {
         jsnbt.controllers.ListControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         var self = this;
         
         var logger = $logger.create('CoursesCoursesController');
 
-        $scope.id = $routeParams.id;
+        $scope.id = $scope.route.current.params.id;
         $scope.parent = undefined;
 
         $scope.title = '';
@@ -34,7 +34,7 @@
 
         $scope.create = function () {
             var url = $jsnbt.entities['course'].getCreateUrl($scope.parent, $scope.prefix);
-            $location.next(url);
+            $scope.route.next(url);
         };
 
         $scope.canEdit = function () {
@@ -43,7 +43,7 @@
 
         $scope.edit = function () {
             var url = $jsnbt.entities[$scope.parent.entity].getEditUrl($scope.parent, $scope.prefix);
-            $location.next(url);
+            $scope.route.next(url);
         };
 
         $scope.canDelete = function () {
@@ -67,7 +67,7 @@
 
             open: function (node) {
                 var url = $jsnbt.entities[node.entity].getViewUrl(node, $scope.prefix);
-                $location.next(url);
+                $scope.route.next(url);
             },
 
             canEdit: function (node) {
@@ -76,7 +76,7 @@
 
             edit: function (node) {
                 var url = $jsnbt.entities[node.entity].getEditUrl(node, $scope.prefix);
-                $location.next(url);
+                $scope.route.next(url);
             },
 
             canDelete: function (node) {
@@ -184,5 +184,5 @@
     };
 
     angular.module("jsnbt-courses")
-        .controller('CoursesCoursesController', ['$scope', '$rootScope', '$route', '$routeParams', '$location', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'PagedDataService', 'CoursesSetService', 'CoursesCourseService', 'AuthService', CoursesCoursesController]);
+        .controller('CoursesCoursesController', ['$scope', '$rootScope', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'PagedDataService', 'CoursesSetService', 'CoursesCourseService', 'AuthService', CoursesCoursesController]);
 })();

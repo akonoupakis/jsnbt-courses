@@ -1,7 +1,7 @@
 ﻿; (function () {
     "use strict";
 
-    var CoursesTutorsController = function ($scope, $rootScope, $route, $routeParams, $location, $data, $q, $jsnbt, $logger, ModalService, PagedDataService, AuthService) {
+    var CoursesTutorsController = function ($scope, $rootScope, $data, $q, $jsnbt, $logger, ModalService, PagedDataService, AuthService) {
         jsnbt.controllers.DataListControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         var logger = $logger.create('CoursesTutorsController');
@@ -11,7 +11,7 @@
         };
 
         $scope.viewSettings = function () {
-            $location.next('/modules/courses/tutors/settings');
+            $scope.route.next('/modules/courses/tutors/settings');
         };
 
         this.init().catch(function (ex) {
@@ -22,5 +22,5 @@
     CoursesTutorsController.prototype = Object.create(jsnbt.controllers.DataListControllerBase.prototype);
 
     angular.module("jsnbt-courses")
-        .controller('CoursesTutorsController', ['$scope', '$rootScope', '$route', '$routeParams', '$location', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'PagedDataService', 'AuthService', CoursesTutorsController]);
+        .controller('CoursesTutorsController', ['$scope', '$rootScope', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'PagedDataService', 'AuthService', CoursesTutorsController]);
 })();
