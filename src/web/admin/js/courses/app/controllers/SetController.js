@@ -1,7 +1,7 @@
 ﻿;(function () {
     "use strict";
 
-    var CoursesSetController = function ($scope, $rootScope, $route, $location, $q, $data, $jsnbt, $logger) {
+    var CoursesSetController = function ($scope, $rootScope, $q, $data, $jsnbt, $logger) {
         jsnbt.controllers.NodeFormControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         var logger = $logger.create('CoursesSetController');
@@ -69,6 +69,6 @@
     };
 
     angular.module("jsnbt-courses")
-        .controller('CoursesSetController', ['$scope', '$rootScope', '$route', '$location', '$q', '$data', '$jsnbt', '$logger', CoursesSetController]);
+        .controller('CoursesSetController', ['$scope', '$rootScope', '$q', '$data', '$jsnbt', '$logger', CoursesSetController]);
 
 })();

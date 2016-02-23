@@ -1,7 +1,7 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesSetsController = function ($scope, $rootScope, $route, $location, $data, $jsnbt, $q, $logger, ModalService, AuthService, PagedDataService, CoursesSetService) {
+    var CoursesSetsController = function ($scope, $rootScope, $data, $jsnbt, $q, $logger, ModalService, AuthService, PagedDataService, CoursesSetService) {
         jsnbt.controllers.ListControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         var self = this;
@@ -13,7 +13,7 @@
         };
 
         $scope.viewSettings = function () {
-            $location.next('/modules/courses/sets/settings');
+            $scope.route.next('/modules/courses/sets/settings');
         };
 
         $scope.canCreate = function () {
@@ -22,7 +22,7 @@
 
         $scope.create = function () {
             var url = $jsnbt.entities['courseSet'].getCreateUrl(undefined, $scope.prefix);
-            $location.next(url);
+            $scope.route.next(url);
         };
 
         $scope.gridFn = {
@@ -32,7 +32,7 @@
 
             open: function (node) {
                 var url = $jsnbt.entities[node.entity].getViewUrl(node, $scope.prefix);
-                $location.next(url);
+                $scope.route.next(url);
             },
 
             canEdit: function (node) {
@@ -41,7 +41,7 @@
 
             edit: function (node) {
                 var url = $jsnbt.entities[node.entity].getEditUrl(node, $scope.prefix);
-                $location.next(url);
+                $scope.route.next(url);
             },
 
             canDelete: function (node) {
@@ -86,5 +86,5 @@
     };
 
     angular.module("jsnbt-courses")
-        .controller('CoursesSetsController', ['$scope', '$rootScope', '$route', '$location', '$data', '$jsnbt', '$q', '$logger', 'ModalService', 'AuthService', 'PagedDataService', 'CoursesSetService', CoursesSetsController]);
+        .controller('CoursesSetsController', ['$scope', '$rootScope', '$data', '$jsnbt', '$q', '$logger', 'ModalService', 'AuthService', 'PagedDataService', 'CoursesSetService', CoursesSetsController]);
 })();
