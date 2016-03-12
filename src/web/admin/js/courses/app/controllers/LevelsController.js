@@ -1,7 +1,7 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesLevelsController = function ($scope, $rootScope, $data, $q, $jsnbt, $logger, ModalService, AuthService, PagedDataService, CoursesCourseService, CoursesLevelService) {
+    var CoursesLevelsController = function ($scope, $rootScope, $data, $q, $jsnbt, $logger, ModalService, AuthService, FileService,CoursesCourseService, CoursesLevelService) {
         jsnbt.controllers.ListControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         var self = this;
@@ -89,6 +89,13 @@
                     throw ex;
                 });
 
+            },
+
+            sort: function (nodes) {
+                var nodeIds = _.pluck(nodes, 'id');
+                $data.nodes.sort($scope.id, nodeIds).catch(function (ex) {
+                    throw ex;
+                });
             }
         };
 
@@ -102,11 +109,13 @@
     CoursesLevelsController.prototype.load = function () {
         var deferred = this.ctor.$q.defer();
 
-        this.ctor.PagedDataService.get({
-            fn: this.ctor.$jsnbt.db.nodes,
+        this.ctor.$data.nodes.getPage({
             query: {
                 parent: this.scope.id,
-                entity: 'courseLevel'
+                entity: 'courseLevel',
+                $sort: {
+                    order: 1
+                }
             }
         }).then(function (response) {
             deferred.resolve(response);
@@ -160,5 +169,5 @@
     };
 
     angular.module("jsnbt-courses")
-        .controller('CoursesLevelsController', ['$scope', '$rootScope', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'AuthService', 'PagedDataService', 'CoursesCourseService', 'CoursesLevelService', CoursesLevelsController]);
+        .controller('CoursesLevelsController', ['$scope', '$rootScope', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'AuthService', 'CoursesCourseService', 'CoursesLevelService', CoursesLevelsController]);
 })();

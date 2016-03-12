@@ -1,7 +1,7 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesSetsController = function ($scope, $rootScope, $data, $jsnbt, $q, $logger, ModalService, AuthService, PagedDataService, CoursesSetService) {
+    var CoursesSetsController = function ($scope, $rootScope, $data, $jsnbt, $q, $logger, ModalService, AuthService, FileService,CoursesSetService) {
         jsnbt.controllers.ListControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         var self = this;
@@ -70,8 +70,7 @@
     CoursesSetsController.prototype.load = function () {
         var deferred = this.ctor.$q.defer();
 
-        this.ctor.PagedDataService.get({
-            fn: this.ctor.$jsnbt.db.nodes,
+        this.ctor.$data.nodes.getPage({
             query: {
                 parent: '',
                 entity: 'courseSet'
@@ -86,5 +85,5 @@
     };
 
     angular.module("jsnbt-courses")
-        .controller('CoursesSetsController', ['$scope', '$rootScope', '$data', '$jsnbt', '$q', '$logger', 'ModalService', 'AuthService', 'PagedDataService', 'CoursesSetService', CoursesSetsController]);
+        .controller('CoursesSetsController', ['$scope', '$rootScope', '$data', '$jsnbt', '$q', '$logger', 'ModalService', 'AuthService', 'CoursesSetService', CoursesSetsController]);
 })();

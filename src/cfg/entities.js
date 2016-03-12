@@ -11,6 +11,7 @@ module.exports = [{
     name: 'course',
     allowed: ['courseLevel'],
     treeNode: true,
+    ordered: true,
     properties: {
         parent: false,
         levels: true,
@@ -20,6 +21,7 @@ module.exports = [{
     name: 'courseLevel',
     allowed: [],
     treeNode: false,
+    ordered: true,
     properties: {
         parent: false,
         layouts: false,

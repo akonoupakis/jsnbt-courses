@@ -1,7 +1,7 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesCoursesController = function ($scope, $rootScope, $data, $q, $jsnbt, $logger, ModalService, PagedDataService, CoursesSetService, CoursesCourseService, AuthService) {
+    var CoursesCoursesController = function ($scope, $rootScope, $data, $q, $jsnbt, $logger, ModalService, CoursesSetService, CoursesCourseService, AuthService) {
         jsnbt.controllers.ListControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         var self = this;
@@ -12,7 +12,7 @@
         $scope.parent = undefined;
 
         $scope.title = '';
-
+        
         this.enqueue('watch', '', function () {
             var deferred = $q.defer();
 
@@ -91,6 +91,13 @@
                 }).catch(function (ex) {
                     throw ex;
                 });
+            },
+
+            sort: function (nodes) {
+                var nodeIds = _.pluck(nodes, 'id');
+                $data.nodes.sort($scope.id, nodeIds).catch(function (ex) {
+                    throw ex;
+                });
             }
         }
 
@@ -120,11 +127,13 @@
         var loadData = function () {
             var deferred = self.ctor.$q.defer();
 
-            self.ctor.PagedDataService.get({
-                fn: self.ctor.$jsnbt.db.nodes,
+            self.ctor.$data.nodes.getPage({
                 query: {
                     parent: self.scope.id,
-                    entity: 'course'
+                    entity: 'course',
+                    $sort: {
+                        order: 1
+                    }
                 }
             }).then(function (response) {
                 deferred.resolve(response);
@@ -184,5 +193,5 @@
     };
 
     angular.module("jsnbt-courses")
-        .controller('CoursesCoursesController', ['$scope', '$rootScope', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'PagedDataService', 'CoursesSetService', 'CoursesCourseService', 'AuthService', CoursesCoursesController]);
+        .controller('CoursesCoursesController', ['$scope', '$rootScope', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'CoursesSetService', 'CoursesCourseService', 'AuthService', CoursesCoursesController]);
 })();
