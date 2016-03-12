@@ -13,18 +13,22 @@
     <div class="col-sm-12">
         <ctrl-grid class="table-striped" ng-model="model" ng-fn="gridFn" ng-language="defaults.language">
             <ctrl-grid-header>
-                <ctrl-grid-header-column>name</ctrl-grid-header-column>
-                <ctrl-grid-header-column></ctrl-grid-header-column>
+                <ctrl-grid-header-column class="col-sm-5" ng-sort-name="'content.localized.' + defaults.language + '.lastName'" ng-filter-type="string" ng-filter-name="'content.localized.' + defaults.language + '.lastName'">surname</ctrl-grid-header-column>
+                <ctrl-grid-header-column class="col-sm-5" ng-sort-name="'content.localized.' + defaults.language + '.firstName'" ng-filter-type="string" ng-filter-name="'content.localized.' + defaults.language + '.firstName'">forname</ctrl-grid-header-column>
+                <ctrl-grid-header-column class="col-sm-2"></ctrl-grid-header-column>
             </ctrl-grid-header>
             <ctrl-grid-footer>
                 <ctrl-grid-infinite-scroll></ctrl-grid-infinite-scroll>
                 <ctrl-grid-empty>no tutors</ctrl-grid-empty>
             </ctrl-grid-footer>
             <ctrl-grid-body>
-                <ctrl-grid-column>
-                    {{ model.content.localized[language].firstName }} {{ model.content.localized[language].lastName }}
+                <ctrl-grid-column class="col-sm-5">
+                    {{ model.content.localized[language].lastName }}
                 </ctrl-grid-column>
-                <ctrl-grid-buttons-column>
+                <ctrl-grid-column class="col-sm-5">
+                    {{ model.content.localized[language].firstName }}
+                </ctrl-grid-column>
+                <ctrl-grid-buttons-column class="col-sm-2">
                     <button class="btn btn-default glyphicon glyphicon-edit btn-sm" ng-disabled="!fn.canEdit(model)" ng-click="fn.edit(model)" />
                     <button class="btn btn-default glyphicon glyphicon-remove btn-sm" ng-disabled="!fn.canDelete(model)" ng-click="fn.delete(model)" />
                 </ctrl-grid-buttons-column>

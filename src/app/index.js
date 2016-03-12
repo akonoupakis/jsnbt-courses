@@ -32,13 +32,12 @@ module.exports = {
             for (var item in options.url) {
                 if (options.node.entity === 'courseLevel') {
                     options.url[item] += '#' + options.node.id;
-                    next(options.url);
                 }
                 else {
                     options.url[item] += '/' + options.node.seo[item];
-                    next(options.url);
                 }
             }
+            next(options.url);
         },
         
         resolve: function (server, options, next) {

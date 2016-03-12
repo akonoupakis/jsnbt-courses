@@ -1,7 +1,7 @@
 ﻿;(function () {
     "use strict";
     
-    var CoursesTutorController = function ($scope, $rootScope, $data, $q, $jsnbt, $logger, ModalService, PagedDataService) {
+    var CoursesTutorController = function ($scope, $rootScope, $data, $q, $jsnbt, $logger, ModalService) {
         jsnbt.controllers.DataFormControllerBase.apply(this, $rootScope.getBaseArguments($scope));
         
         var self = this;
@@ -76,5 +76,5 @@
     CoursesTutorController.prototype = Object.create(jsnbt.controllers.DataFormControllerBase.prototype);
 
     angular.module("jsnbt-courses")
-        .controller('CoursesTutorController', ['$scope', '$rootScope', '$data', '$q', '$jsnbt', '$logger', 'ModalService', 'PagedDataService', CoursesTutorController]);
+        .controller('CoursesTutorController', ['$scope', '$rootScope', '$data', '$q', '$jsnbt', '$logger', 'ModalService', CoursesTutorController]);
 })();
